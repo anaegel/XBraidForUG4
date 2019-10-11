@@ -7,24 +7,19 @@ set(UG4_XBraid_plugin_VERSION_MAJOR 0.1)
 set(UG4_XBraid_plugin_VERSION_MINOR 0.0)
 
 #[[ ----------  ----------  ---------- ---------- Compiling libraries ---------- ----------  ----------  ---------- ]]
-
-#[[ XBraid libraries TODO compile if not exists ]]
-option(RECOMPILE_UPDATE "Update XBraid" On)
-option(XBRAID_RECOMPILE "Recompile XBraid" On)
-
-
-if (XBRAID_RECOMPILE OR NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/libs/xbraid/braid/libbraid.a")
-    add_custom_command(OUTPUT hello.txt
+if (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/libs/xbraid/braid/libbraid.a")
+    add_custom_command(OUTPUT braidlib
             COMMAND make braid
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/libs/xbraid
             )
 else ()
-    #[[ add_custom_command(
-            OUTPUT hello.txt
+     add_custom_command(
+            OUTPUT braidlib
             COMMAND touch hello.txt
-        ]]
+        )
 endif ()
-add_custom_target(run ALL DEPENDS hello.txt)
+add_custom_target(run ALL DEPENDS braidlib)
+
 
 #[[
 IF(CMAKE_COMPILER_IS_GNUCC)
@@ -34,23 +29,38 @@ ENDIF(CMAKE_COMPILER_IS_GNUCC)
 ]]
 set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS_INIT} -fPIC")
 
+
+
 set(SOURCES
         src/xbraidforug4_plugin.cpp
-        src/stdafx.h
+        src/Telvanni.h
+        src/Talasma.h
+        src/PBraid.h
         src/BraidVectorStruct.h
 
-        src/PBraidApp.h
+
+        src/ITSGFBraidApp.h
         src/GFBraidApp.h
         src/RGFBraidApp.h
-        src/PBraid.h
+        src/MGFBraidApp.h
 
-        src/XCommunicator.h
+
+
+        src/PBraidApp.h
+        src/SpaceTimeCommunicator.h
+        src/Scriptor.h
+
+
+	    src/MemoryObserver.h
         )
 
 
-if (TARGET run)
-    set(UG_ROOT_CMAKE_PATH "/home/parnet/Projects/ug4/ugcore/cmake") #[[todo]]
-endif ()
+if(UG_ROOT_CMAKE_PATH)
+    MESSAGE("UG Root was found")
+else(UG_ROOT_CMAKE_PATH)
+    set(UG_ROOT_CMAKE_PATH /opt/ug/ugcore/cmake)
+endif(UG_ROOT_CMAKE_PATH)
+
 include(${UG_ROOT_CMAKE_PATH}/ug_plugin_includes.cmake)
 
 if (buildEmbeddedPlugins)

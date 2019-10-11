@@ -47,7 +47,7 @@ public:
 
 
     SPGridFunction ux; // for t > tstart
-    SmartPtr<XCommunicator> comm;
+    SmartPtr<SpaceTimeCommunicator> comm;
 
     const char *filename{};
 

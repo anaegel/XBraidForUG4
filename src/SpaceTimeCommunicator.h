@@ -2,8 +2,8 @@
 // Created by parnet on 16.05.19.
 //
 
-#ifndef UG_PLUGIN_XBRAIDFORUG4_XCOMMUNICATOR_H
-#define UG_PLUGIN_XBRAIDFORUG4_XCOMMUNICATOR_H
+#ifndef UG_PLUGIN_XBRAIDFORUG4_SPACETIMECOMMUNICATOR_H
+#define UG_PLUGIN_XBRAIDFORUG4_SPACETIMECOMMUNICATOR_H
 
 #include <unistd.h>
 
@@ -18,7 +18,7 @@
  * This class splits the MPI_Comm of ug4 (named PCL_COMM_WORLD) into a temporal and a spatial communicator.
  * The ug4 MPI_Comm will then be replaced by the SPATIAL Communicator.
  */
-class XCommunicator {
+class SpaceTimeCommunicator {
 
 public:
     MPI_Comm GLOBAL = PCL_COMM_WORLD;
@@ -31,9 +31,9 @@ public:
 
     bool verbose = true;
 
-    XCommunicator() = default;
+    SpaceTimeCommunicator() = default;
 
-    ~XCommunicator() = default;
+    ~SpaceTimeCommunicator() = default;
 
     void split(int numSpatialProcesses) { // nproc = x_procs * t_procs
         int world_size;
@@ -65,6 +65,11 @@ public:
         PCL_COMM_WORLD = SPATIAL; // replaces ugs world communicator with the communicator for spatial
     }
 
+    void unsplit(){
+        PCL_COMM_WORLD = GLOBAL;
+        SPATIAL = PCL_COMM_WORLD;
+        TEMPORAL = PCL_COMM_WORLD;
+    }
 
     int getGlobalSize() {
         return globalsize;
@@ -95,61 +100,7 @@ public:
         MPI_Comm_rank(GLOBAL, &rank);
         return rank;
     }
-
-    // todo delete
-    int outputRank = 0;
-
-    void setOutput(int globalRank) {
-        outputRank = globalRank;
-    }
-
-    bool communication_on = true;
-
-    void print(std::string v) {
-        if (communication_on) {
-            bool s = true;
-            if (getGlobalRank() != outputRank) {
-                const char *buffer = v.c_str();
-                int size = v.size();
-                MPI_Send(buffer, size, MPI_CHAR, outputRank, 0, this->GLOBAL);
-                usleep(100000);
-            } else if (s) {
-                std::cout << outputRank << "\t" << v << std::endl;
-            }
-        } else {
-            std::cout << outputRank << "\t" << v << std::endl;
-        }
-    }
-
-    void processPrint() {
-        if (communication_on) {
-            char buffer[2048];
-            memset(buffer, 0, sizeof(buffer));
-            char exittoken[200] = "exit";
-
-            int rem = globalsize - 1;
-            std::cout << "globalsize: " << globalsize << "\t " << rem << std::endl;
-            MPI_Status status;
-/*        for (int i = 0; i < this->globalsize; i++) {
-            std::cout << "Process " << i << std::endl;
-            if (i == outputRank) {
-                continue;
-            }*/
-
-            MPI_Recv(&buffer, 2048, MPI_CHAR, MPI_ANY_SOURCE, 0, this->GLOBAL, &status);
-            while (rem != 0) {
-                if (strcmp(buffer, exittoken) == 0) {
-                    rem--;
-                }
-                std::cout << status.MPI_SOURCE << "\t" << buffer << std::endl;
-                memset(buffer, 0, sizeof(buffer));
-                MPI_Recv(&buffer, 2048, MPI_CHAR, MPI_ANY_SOURCE, 0, this->GLOBAL, &status);
-            }
-        }
-
-    }
-
 };
 
 
-#endif //UG_PLUGIN_XBRAIDFORUG4_XCOMMUNICATOR_H
+#endif //UG_PLUGIN_XBRAIDFORUG4_SPACETIMECOMMUNICATOR_H
