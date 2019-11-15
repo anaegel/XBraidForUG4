@@ -31,15 +31,15 @@ public:
     typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
     typedef SmartPtr <TGridFunction> SPGridFunction;
 
-    typedef SmartPtr <ug::UserData<double, TGridFunction::dim>> SPData;
+    typedef SmartPtr<ug::UserData<double, TGridFunction::dim> > SPData;
     typedef RGFBraidApp<TDomain, TAlgebra> TBraidApp;
 
-    typedef SmartPtr <GFBraidApp<TDomain, TAlgebra>> SPBraidApp;
+    typedef SmartPtr<GFBraidApp<TDomain, TAlgebra> > SPBraidApp;
 
-    typedef SmartPtr <ug::DomainDiscretization<TDomain, TAlgebra>> SPDomainDisc;
+    typedef SmartPtr<ug::DomainDiscretization<TDomain, TAlgebra> > SPDomainDisc;
 
-    typedef SmartPtr <SpaceTimeCommunicator> SPXCommunicator;
-    typedef SmartPtr <Scriptor<TDomain, TAlgebra>> SPScriptor;
+    typedef SmartPtr<SpaceTimeCommunicator> SPXCommunicator;
+    typedef SmartPtr<Scriptor<TDomain, TAlgebra> > SPScriptor;
 
 private:
     BraidCore *m_bc = nullptr;
@@ -86,7 +86,7 @@ public:
     //
     // -----------------------------------------------------------------------------------------------------------------
 
-    void createAccess(SmartPtr <ug::VTKOutput<TDomain::dim>> out) {
+    void createAccess(SmartPtr<ug::VTKOutput<TDomain::dim> > out) {
         // this->m_out = out;-
         // mgf->m_out = this->m_out;
     }

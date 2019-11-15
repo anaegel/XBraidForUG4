@@ -9,6 +9,10 @@
 #include <ctime>
 #include <ratio>
 
+#include "trace_tools.h"
+
+namespace TraceTools {
+
 class Telvanni {
 public:
     std::chrono::high_resolution_clock::time_point t0;
@@ -25,7 +29,7 @@ public:
     }
     void stop(){
         t1 = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> difference = std::chrono::duration_cast<std::chrono::duration<double>>(t1- t0);
+        std::chrono::duration<double> difference = std::chrono::duration_cast<std::chrono::duration<double> >(t1- t0);
         time += difference.count();
         usage++;
     }
@@ -64,7 +68,7 @@ class Redoran {
 public:
 
     std::vector<Telvanni> timer = std::vector<Telvanni>();
-    std::vector<std::vector<Telvanni>> leveltimer = std::vector<std::vector<Telvanni>>();
+    std::vector<std::vector<Telvanni> > leveltimer = std::vector<std::vector<Telvanni> >();
 
     Redoran(){
 
@@ -76,7 +80,7 @@ public:
         }
 
 
-        leveltimer = std::vector<std::vector<Telvanni>>(cLevelObserver,
+        leveltimer = std::vector<std::vector<Telvanni> >(cLevelObserver,
                 std::vector<Telvanni>(maxlevel, Telvanni()));
     }
 
@@ -94,4 +98,5 @@ public:
 
 };
 
+}
 #endif //UG_PLUGIN_XBRAIDFORUG4_TELVANNI_H

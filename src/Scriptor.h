@@ -19,7 +19,7 @@ public:
 
     Scriptor() = default;
 
-    virtual ~Scriptor() = default;
+    virtual ~Scriptor() {} ;
 
     virtual bool write(TGridFunction *u, int index, double time) = 0;
 
@@ -37,8 +37,9 @@ template<typename TDomain, typename TAlgebra>
 class VTKScriptor : public Scriptor<TDomain, TAlgebra> {
 public:
     typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
-    typedef SmartPtr <TGridFunction> SPGridFunction;
-    typedef SmartPtr <ug::VTKOutput<TDomain::dim>> SPVTKOutput;
+    typedef SmartPtr<TGridFunction> SPGridFunction;
+    typedef SmartPtr<ug::VTKOutput<TDomain::dim> > SPVTKOutput;
+    typedef Scriptor<TDomain, TAlgebra> TScriptor;
 
     SPVTKOutput m_out;
     const char *m_filename;
@@ -75,8 +76,8 @@ template<typename TDomain, typename TAlgebra>
 class VTKIterationScriptor : public Scriptor<TDomain, TAlgebra> {
 public:
     typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
-    typedef SmartPtr <TGridFunction> SPGridFunction;
-    typedef SmartPtr <ug::VTKOutput<TDomain::dim>> SPVTKOutput;
+    typedef SmartPtr<TGridFunction> SPGridFunction;
+    typedef SmartPtr<ug::VTKOutput<TDomain::dim> > SPVTKOutput;
 
     SPVTKOutput m_out;
     const char *m_filename;
@@ -113,8 +114,8 @@ template<typename TDomain, typename TAlgebra>
 class VTKModScriptor : public Scriptor<TDomain, TAlgebra> {
 public:
     typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
-    typedef SmartPtr <TGridFunction> SPGridFunction;
-    typedef SmartPtr <ug::VTKOutput<TDomain::dim>> SPVTKOutput;
+    typedef SmartPtr<TGridFunction> SPGridFunction;
+    typedef SmartPtr<ug::VTKOutput<TDomain::dim> > SPVTKOutput;
 
     SPVTKOutput m_out;
     const char *m_filename;
@@ -165,11 +166,11 @@ template<typename TDomain, typename TAlgebra>
 class EvalScriptor : public Scriptor<TDomain, TAlgebra> {
 public:
     typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
-    typedef SmartPtr <TGridFunction> SPGridFunction;
-    typedef SmartPtr <ug::VTKOutput<TDomain::dim>> SPVTKOutput;
-    typedef SmartPtr <ug::IDomainDiscretization<TAlgebra>> SPDomainDisc;
+    typedef SmartPtr<TGridFunction> SPGridFunction;
+    typedef SmartPtr<ug::VTKOutput<TDomain::dim> > SPVTKOutput;
+    typedef SmartPtr<ug::IDomainDiscretization<TAlgebra> > SPDomainDisc;
 
-    typedef SmartPtr <ug::UserData<double, TGridFunction::dim>> SPData;
+    typedef SmartPtr<ug::UserData<double, TGridFunction::dim> > SPData;
     SPData m_data;
 
     const char *m_cmp;
@@ -281,8 +282,8 @@ template<typename TDomain, typename TAlgebra>
 class MATLABScriptor : public Scriptor<TDomain, TAlgebra> {
 public:
     typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
-    typedef SmartPtr <TGridFunction> SPGridFunction;
-    typedef SmartPtr <ug::VTKOutput<TDomain::dim>> SPVTKOutput;
+    typedef SmartPtr<TGridFunction> SPGridFunction;
+    typedef SmartPtr<ug::VTKOutput<TDomain::dim> > SPVTKOutput;
 
     SPVTKOutput m_out;
     std::ofstream &debugwriter;
@@ -330,12 +331,12 @@ template<typename TDomain, typename TAlgebra>
 class MultiScriptor : public Scriptor<TDomain, TAlgebra> {
 
 public:
-    typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
-    typedef SmartPtr <TGridFunction> SPGridFunction;
-    typedef SmartPtr <ug::VTKOutput<TDomain::dim>> SPVTKOutput;
+    typedef typename ug::GridFunction<TDomain, TAlgebra> TGridFunction;
+    typedef SmartPtr<TGridFunction> SPGridFunction;
+    typedef SmartPtr<ug::VTKOutput<TDomain::dim> > SPVTKOutput;
+    typedef Scriptor<TDomain, TAlgebra> TScriptor;
 
 
-    std::vector<SmartPtr<Scriptor<TDomain, TAlgebra>>> lst;
 
     MultiScriptor(){}
 
@@ -347,8 +348,9 @@ public:
 
     }
 
-    void addScriptor(SmartPtr <Scriptor<TDomain, TAlgebra>> scriptor) {
-        this->lst.emplace_back(scriptor);
+    void addScriptor(SmartPtr<TScriptor> scriptor) {
+        // this->lst.emplace_back(scriptor);
+    	this->lst.push_back(scriptor);
     }
 
     void writeTimePVD(TGridFunction *u) {};
@@ -375,6 +377,8 @@ public:
             this->lst[k]->print(filename, u, index, time);
         }
     }
+protected:
+    std::vector<SmartPtr<TScriptor> > lst;
 };
 
 std::string ptr2str(void *c) {

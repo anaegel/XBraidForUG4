@@ -26,18 +26,18 @@ public:
     typedef SmartPtr<TGridFunction> SPGridFunction;
 
     typedef ug::ThetaTimeStep<TAlgebra> TTimeStep;
-    typedef SmartPtr<ug::ThetaTimeStep<TAlgebra>> SPTimeStep;
+    typedef SmartPtr<ug::ThetaTimeStep<TAlgebra> > SPTimeStep;
 
     typedef ug::VectorTimeSeries<typename TAlgebra::vector_type> TTimeSeries;
-    typedef SmartPtr<ug::VectorTimeSeries<typename TAlgebra::vector_type>> SPTimeSeries;
+    typedef SmartPtr<ug::VectorTimeSeries<typename TAlgebra::vector_type> > SPTimeSeries;
 
-    typedef SmartPtr<ug::ILinearOperatorInverse<typename TAlgebra::vector_type>> SPSolver;
+    typedef SmartPtr<ug::ILinearOperatorInverse<typename TAlgebra::vector_type> > SPSolver;
 
-    typedef SmartPtr<ug::AssembledLinearOperator<TAlgebra>> SPAssembledOperator;
+    typedef SmartPtr<ug::AssembledLinearOperator<TAlgebra> > SPAssembledOperator;
 
-    typedef SmartPtr<ug::ITimeIntegrator<TDomain, TAlgebra>> SPTimeIntegrator;
+    typedef SmartPtr<ug::ITimeIntegrator<TDomain, TAlgebra> > SPTimeIntegrator;
 
-    typedef SmartPtr<ug::VTKOutput<TDomain::dim>> SPOutput;
+    typedef SmartPtr<ug::VTKOutput<TDomain::dim> > SPOutput;
 
     SPTimeStep timeDisc;
     SPSolver linSolver;
@@ -107,12 +107,12 @@ public:
 
 
     double assembled_dt = 0;
-    SmartPtr<ug::AssembledLinearOperator<TAlgebra>> A;
+    SmartPtr<ug::AssembledLinearOperator<TAlgebra> > A;
     //SPGridFunction defect;
 
     void init() {
         const ug::GridLevel gridlevel = this->u0->grid_level();
-        A = SmartPtr<ug::AssembledLinearOperator<TAlgebra>>(
+        A = SmartPtr<ug::AssembledLinearOperator<TAlgebra> >(
                 new ug::AssembledLinearOperator<TAlgebra>(timeDisc, gridlevel));
     }
 

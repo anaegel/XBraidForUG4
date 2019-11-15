@@ -9,7 +9,7 @@
 #include <ctime>
 #include <ratio>
 
-
+namespace TraceTools {
 
 class Talasma {
 public:
@@ -33,14 +33,16 @@ public:
 
     void now(double &total,double &diff){
         t2 = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> t0diff = std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t0);
+        std::chrono::duration<double> t0diff = std::chrono::duration_cast<std::chrono::duration<double> >(t2 - t0);
         total = t0diff.count();
         diff = 0;
     }
     double get(){
-        std::chrono::duration<double> difference = std::chrono::duration_cast<std::chrono::duration<double>>(t1- t0);
+        std::chrono::duration<double> difference = std::chrono::duration_cast<std::chrono::duration<double> >(t1- t0);
         return difference.count();
     }
 };
+
+}
 
 #endif //UG_PLUGIN_XBRAIDFORUG4_TALASMA_H

@@ -28,15 +28,15 @@ namespace ug{
                 string tag = GetDomainAlgebraTag<TDomain, TAlgebra>();
 
                 typedef ug::GridFunction<TDomain, TAlgebra> TGridFunction;
-                typedef SmartPtr<ug::GridFunction<TDomain, TAlgebra>> SPGridFunction;
-                typedef SmartPtr<ug::UserData<double, TGridFunction::dim>> SPData;
+                typedef SmartPtr<ug::GridFunction<TDomain, TAlgebra> > SPGridFunction;
+                typedef SmartPtr<ug::UserData<double, TGridFunction::dim> > SPData;
                 typedef SmartPtr<SpaceTimeCommunicator> SPXCommunicator;
-                typedef SmartPtr<ug::VTKOutput<TDomain::dim>> SPVTKOutput;
+                typedef SmartPtr<ug::VTKOutput<TDomain::dim> > SPVTKOutput;
 
 
 
                 typedef Scriptor<TDomain, TAlgebra> TScriptor;
-                typedef SmartPtr<Scriptor<TDomain, TAlgebra>> SPScriptor;
+                typedef SmartPtr<Scriptor<TDomain, TAlgebra> > SPScriptor;
                 string name_scr = string("Scriptor").append(suffix);
                 reg.add_class_<TScriptor>(name_scr, grp);
                 reg.add_class_to_group(name_scr, "Scriptor", tag);
@@ -177,7 +177,7 @@ namespace ug{
 
 
                 typedef SmartPtr<SpaceTimeCommunicator> SPXCommunicator;
-                typedef SmartPtr<GFBraidApp<TDomain, TAlgebra>> SPBraidApp;
+                typedef SmartPtr<GFBraidApp<TDomain, TAlgebra> > SPBraidApp;
                 typedef PBraid<TDomain, TAlgebra> TBraid;
                 string name = string("Braid").append(suffix);
                 reg.add_class_<TBraid>(name, grp)

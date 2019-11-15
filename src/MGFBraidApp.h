@@ -35,21 +35,21 @@ public:
 
     typedef ug::ThetaTimeStep <TAlgebra> TTimeStep;
 
-    typedef SmartPtr <ug::ThetaTimeStep<TAlgebra>> SPTimeStep;
+    typedef SmartPtr<ug::ThetaTimeStep<TAlgebra> > SPTimeStep;
 
     typedef ug::VectorTimeSeries<typename TAlgebra::vector_type> TTimeSeries;
 
-    typedef SmartPtr <ug::VectorTimeSeries<typename TAlgebra::vector_type>> SPTimeSeries;
+    typedef SmartPtr<ug::VectorTimeSeries<typename TAlgebra::vector_type> > SPTimeSeries;
 
-    typedef SmartPtr <ug::ILinearOperatorInverse<typename TAlgebra::vector_type>> SPSolver;
+    typedef SmartPtr<ug::ILinearOperatorInverse<typename TAlgebra::vector_type> > SPSolver;
 
-    typedef SmartPtr <ug::AssembledLinearOperator<TAlgebra>> SPAssembledOperator;
+    typedef SmartPtr<ug::AssembledLinearOperator<TAlgebra> > SPAssembledOperator;
 
-    typedef ug::AssembledLinearOperator <TAlgebra> TAssembledOperator;
+    typedef ug::AssembledLinearOperator<TAlgebra> TAssembledOperator;
 
-    typedef SmartPtr <ug::ITimeIntegrator<TDomain, TAlgebra>> SPTimeIntegrator;
+    typedef SmartPtr<ug::ITimeIntegrator<TDomain, TAlgebra> > SPTimeIntegrator;
 
-    typedef SmartPtr <ug::VTKOutput<TDomain::dim>> SPOutput;
+    typedef SmartPtr<ug::VTKOutput<TDomain::dim> > SPOutput;
 
 
     struct LevelSolver {
@@ -144,7 +144,7 @@ public:
 #endif
 
 #if TRACE_GRIDFUNCTION == 1
-        this->matlab = SmartPtr<MATLABScriptor<TDomain, TAlgebra>>(new MATLABScriptor<TDomain, TAlgebra>(this->debugwriter));
+        this->matlab = SmartPtr<MATLABScriptor<TDomain, TAlgebra> >(new MATLABScriptor<TDomain, TAlgebra>(this->debugwriter));
 #endif
         const ug::GridLevel gridlevel = this->m_u0->grid_level();
         for (size_t i = 0; i < this->m_levels; ++i) {

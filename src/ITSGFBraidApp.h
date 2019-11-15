@@ -28,19 +28,19 @@ public:
     * Typedefs
     ***************************************************************************/
     typedef GFBraidApp<TDomain, TAlgebra> base_type;
-    typedef MGFBraidApp <TDomain, TAlgebra> this_type;
+    typedef MGFBraidApp<TDomain, TAlgebra> this_type;
 
-    typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
+    typedef ug::GridFunction<TDomain, TAlgebra> TGridFunction;
 
-    typedef SmartPtr <TGridFunction> SPGridFunction;
+    typedef SmartPtr<TGridFunction> SPGridFunction;
 
     typedef ug::ITimeDiscretization <TAlgebra> TTimeStep;
 
-    typedef SmartPtr <TTimeStep> SPTimeStep;
+    typedef SmartPtr<TTimeStep> SPTimeStep;
 
     typedef ug::VectorTimeSeries<typename TAlgebra::vector_type> TTimeSeries;
 
-    typedef SmartPtr <ug::VectorTimeSeries<typename TAlgebra::vector_type>> SPTimeSeries;
+    typedef SmartPtr<ug::VectorTimeSeries<typename TAlgebra::vector_type> > SPTimeSeries;
 
     typedef ug::ILinearOperatorInverse<typename TAlgebra::vector_type> TLinearSolver;
 
@@ -62,9 +62,9 @@ public:
     typedef SmartPtr <TAssembledOperator> SPAssembledOperator;
 
 
-    typedef SmartPtr <ug::ITimeIntegrator<TDomain, TAlgebra>> SPTimeIntegrator;
+    typedef SmartPtr<ug::ITimeIntegrator<TDomain, TAlgebra> > SPTimeIntegrator;
 
-    typedef SmartPtr <ug::VTKOutput<TDomain::dim>> SPOutput;
+    typedef SmartPtr<ug::VTKOutput<TDomain::dim> > SPOutput;
 
 
     struct LevelSolver {
@@ -190,7 +190,7 @@ public:
 #endif
 
 #if TRACE_GRIDFUNCTION == 1
-        this->matlab = SmartPtr<MATLABScriptor<TDomain, TAlgebra>>(new MATLABScriptor<TDomain, TAlgebra>(this->debugwriter));
+        this->matlab = SmartPtr<MATLABScriptor<TDomain, TAlgebra> >(new MATLABScriptor<TDomain, TAlgebra>(this->debugwriter));
 #endif
         const ug::GridLevel gridlevel = this->m_u0->grid_level();
 

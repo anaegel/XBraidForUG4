@@ -32,11 +32,11 @@ public:
 
     typedef ug::ThetaTimeStep <TAlgebra> TTimeStep;
 
-    typedef SmartPtr<ug::ThetaTimeStep<TAlgebra>> SPTimeStep;
+    typedef SmartPtr<ug::ThetaTimeStep<TAlgebra> > SPTimeStep;
 
     typedef ug::VectorTimeSeries<typename TAlgebra::vector_type> TTimeSeries;
 
-    typedef SmartPtr<ug::VectorTimeSeries<typename TAlgebra::vector_type>> SPTimeSeries;
+    typedef SmartPtr<ug::VectorTimeSeries<typename TAlgebra::vector_type> > SPTimeSeries;
 
     typedef ug::ILinearOperatorInverse<typename TAlgebra::vector_type> TSolver;
 
@@ -48,7 +48,7 @@ public:
 
     typedef ug::AssembledLinearOperator <TAlgebra> TAssembledOperator;
 
-    typedef SmartPtr <ug::AssembledLinearOperator<TAlgebra>> SPAssembledOperator;
+    typedef SmartPtr<ug::AssembledLinearOperator<TAlgebra> > SPAssembledOperator;
 
     typedef ug::ITimeIntegrator<TDomain, TAlgebra> TTimeIntegrator;
 
@@ -126,7 +126,7 @@ public:
 
 
 #if TRACE_GRIDFUNCTION == 1
-        this->matlab = SmartPtr<MATLABScriptor<TDomain, TAlgebra>>(new MATLABScriptor<TDomain, TAlgebra>(this->debugwriter));
+        this->matlab = SmartPtr<MATLABScriptor<TDomain, TAlgebra> >(new MATLABScriptor<TDomain, TAlgebra>(this->debugwriter));
 #endif
         const ug::GridLevel gridlevel = this->m_u0->grid_level();
         m_A = SPAssembledOperator(new TAssembledOperator(m_timeDisc, gridlevel));

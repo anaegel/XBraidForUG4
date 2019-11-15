@@ -6,14 +6,26 @@
 #define UG_PLUGIN_XBRAIDFORUG4_GFBRAIDAPP_H
 
 
+
+
+#include <iomanip>
+#include <sstream>
+
 #include "BraidVectorStruct.h"
 #include "SpaceTimeCommunicator.h"
 #include "Scriptor.h"
-#include "MemoryObserver.h"
+
+#include "trace_tools.h"
 #include "Talasma.h"
 #include "Telvanni.h"
-#include <iomanip>
-#include <sstream>
+// #include "MemoryObserver.h"
+
+#if TRACE_GRIDFUNCTION == 1
+    #define MATLAB(u,i,t) this->matlab->write(u,i,t)
+#else
+    #define MATLAB(u, i, t)
+#endif
+
 
 template<typename TDomain, typename TAlgebra>
 class GFBraidApp : public BraidApp {
@@ -22,13 +34,14 @@ public:
     // type definition to shorten identifier
     // -----------------------------------------------------------------------------------------------------------------
     typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
-    typedef SmartPtr <TGridFunction> SPGridFunction;
-    typedef SmartPtr <ug::UserData<double, TGridFunction::dim>> SPData;
+    typedef SmartPtr<TGridFunction> SPGridFunction;
+    typedef SmartPtr<ug::UserData<double, TGridFunction::dim> > SPData;
     typedef typename TAlgebra::vector_type::value_type vector_value_type;
-    typedef SmartPtr <ug::IDomainDiscretization<TAlgebra>> SPDomainDisc;
-    typedef SmartPtr <Scriptor<TDomain, TAlgebra>> SPScriptor;
+    typedef SmartPtr<ug::IDomainDiscretization<TAlgebra> > SPDomainDisc;
+    typedef SmartPtr<Scriptor<TDomain, TAlgebra> > SPScriptor;
 
     typedef GFBraidApp<TDomain, TAlgebra> this_type;
+
     // -----------------------------------------------------------------------------------------------------------------
     // members for vector creation / initialization
     // -----------------------------------------------------------------------------------------------------------------
@@ -51,7 +64,7 @@ public:
     Talasma timer;
 
 #if TRACE_TIMINGS == 1
-    Redoran redoran;
+    TraceTools::Redoran redoran;
 #endif
 
 #if TRACE_GRIDFUNCTION == 1
@@ -145,8 +158,10 @@ public:
 
     void release() {
 #if TRACE_TIMINGS
-        for (int i = Observer::T_INIT; i != Observer::T_RECV; i++) {
-            Telvanni &tel = redoran.get(static_cast<Observer >(i));
+    {
+    	using namespace TraceTools;
+        for (Observer i = T_INIT; i != T_RECV; i++) {
+            Telvanni &tel = redoran.get(i);
             this->debugwriter << std::setw(20) << ObserverNames[i]
                               << std::setw(5) << " ;"
                               << std::setw(12) << tel.getTime() << ";"
@@ -166,6 +181,7 @@ public:
                                   << std::endl;
             }
         }
+    }
 #endif
     }
 
