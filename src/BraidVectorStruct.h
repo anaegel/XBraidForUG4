@@ -6,7 +6,7 @@
 #define UG_PLUGIN_XBRAIDFORUG4_BRAIDVECTORSTRUCT_H
 
 #include "../libs/xbraid/braid/braid.hpp"
-#include "trace_tools.h"
+#include "trace_tools_config.h"
 
 /*
  * this structure represents the grid functions that are used within xbraid as vector types. It is possible to create

@@ -6,7 +6,7 @@
 #define UG_PLUGIN_XBRAIDFORUG4_MEMORYOBSERVER_H
 
 
-#include "sys/types.h"
+#include <sys/types.h>
 #ifdef __APPLE__ && __MACH__
 #include <sys/sysctl.h>
 #else
@@ -17,7 +17,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include "trace_tools.h"
+#include "trace_tools_config.h"
 
 // basing on https://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
 namespace TraceTools {

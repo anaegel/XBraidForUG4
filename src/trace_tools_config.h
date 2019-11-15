@@ -2,10 +2,10 @@
 #define _XBRAID4UG__TRACE_TOOLS_H_
 
 
-#define TRACE_INDEX 1
+#define TRACE_INDEX 0 // 1
 #define TRACE_CONST 0
-#define TRACE_DEFECT 1
-#define TRACE_ACCESS 1
+#define TRACE_DEFECT 0 // 1
+#define TRACE_ACCESS 0 // 1
 
 /**
  * To display the grid functions as matlab vectors (for debugging)
@@ -15,8 +15,8 @@
 /**
  * To display the time points to which the BufferUnpack and BufferPack functions are requested to
  */
-#define TRACE_RECVTIME 1
-#define TRACE_TIMINGS 1
+#define TRACE_RECVTIME 0 // 1
+#define TRACE_TIMINGS 0 // 1
 
 #if TRACE_TIMINGS == 1
     #define StartRedoran(opt) this->redoran.get(opt).start()
@@ -28,13 +28,6 @@
     #define StopRedoran(opt)
     #define StartRedoranLevel(opt, l)
     #define StopRedoranLevel(opt, l)
-#endif
-
-
-#if TRACE_GRIDFUNCTION == 1
-    #define MATLAB(u,i,t) this->matlab->write(u,i,t)
-#else
-    #define MATLAB(u, i, t)
 #endif
 
 

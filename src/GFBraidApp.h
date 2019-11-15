@@ -15,7 +15,7 @@
 #include "SpaceTimeCommunicator.h"
 #include "Scriptor.h"
 
-#include "trace_tools.h"
+#include "trace_tools_config.h"
 #include "Talasma.h"
 #include "Telvanni.h"
 // #include "MemoryObserver.h"

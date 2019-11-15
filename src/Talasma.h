@@ -9,6 +9,8 @@
 #include <ctime>
 #include <ratio>
 
+#include "trace_tools_config.h"
+
 namespace TraceTools {
 
 class Talasma {
