@@ -49,7 +49,7 @@ public:
     SPGridFunction ux; // for t > tstart
     SmartPtr<SpaceTimeCommunicator> comm;
 
-    const char *filename{};
+    const char *filename = "FixedFilename";
 
     std::string pointerToString(void *c) {
         std::stringstream ss;

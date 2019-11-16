@@ -291,6 +291,7 @@ namespace ug{
     extern "C" void
     InitUGPlugin_XBraidForUG4(Registry *reg, string grp) {
         using namespace XBraidForUG4;
+        using namespace TraceTools;
         grp.append("XBraidForUG4");
         reg->add_class_<SpaceTimeCommunicator>("SpaceTimeCommunicator","XBraid","")
                 .add_method("split",&SpaceTimeCommunicator::split)

@@ -19,7 +19,8 @@
 #include "GFBraidApp.h"
 
 template<typename TDomain, typename TAlgebra>
-class MGFBraidApp : public GFBraidApp<TDomain, TAlgebra> {
+class MGFBraidApp : public GFBraidApp<TDomain, TAlgebra>
+{
 
 public:
 
@@ -134,16 +135,17 @@ public:
     }
 
     void init() override {
-        std::stringstream ss;
-        ss << "job_" << this->m_comm->getTemporalRank() << ".output";
-        this->debugwriter.open(ss.str());
 
-        this->timer.start();
+
+        base_type::timer.start();
 #if TRACE_TIMINGS == 1
         this->redoran = Redoran(this->m_levels);
 #endif
 
 #if TRACE_GRIDFUNCTION == 1
+        std::stringstream ss;
+        ss << "job_" << this->m_comm->getTemporalRank() << ".output";
+        debugwriter.open(ss.str());
         this->matlab = SmartPtr<MATLABScriptor<TDomain, TAlgebra> >(new MATLABScriptor<TDomain, TAlgebra>(this->debugwriter));
 #endif
         const ug::GridLevel gridlevel = this->m_u0->grid_level();
@@ -179,12 +181,12 @@ public:
 
 
             if (fstop == nullptr) {
-                this->debugwriter << "u_" << u->index << " = step_"<<l<<"_n( u_" << u->index << ", u_" << ustop->index
+                base_type::debugwriter << "u_" << u->index << " = step_"<<l<<"_n( u_" << u->index << ", u_" << ustop->index
                                   << ", null, " << t_start << ", " << current_dt << ", " << t_stop << ", " << l
                                   << ")"
                                   << "\t\t % " << tindex << std::endl;
             } else {
-                this->debugwriter << "u_" << u->index << " = step_"<<l<<"_r( u_" << u->index << ", u_" << ustop->index
+            	base_type::debugwriter << "u_" << u->index << " = step_"<<l<<"_r( u_" << u->index << ", u_" << ustop->index
                                   << ", u_"
                                   << fstop->index << ", " << t_start << ", " << current_dt << ", " << t_stop << ", "
                                   << l << ")"
@@ -370,7 +372,7 @@ public:
 
     braid_Int Coarsen(braid_Vector fu, braid_Vector *cu, BraidCoarsenRefStatus &status)
     override {
-        this->Clone(fu, cu);
+       /* Clone(fu, cu);
 
         auto *sp_fu = (SPGridFunction *) fu->value;
         auto *sp_cu = (SPGridFunction *) (*cu)->value;
@@ -381,14 +383,14 @@ public:
         status.GetCTstop(&t_upper);
         //status.GetFTstop(&t_upper);
 
-        m_spIntegratorC->apply(*sp_fu, t_upper, sp_cu->cast_const(), t_lower); // todo check fu, cu order
+        m_spIntegratorC->apply(*sp_fu, t_upper, sp_cu->cast_const(), t_lower); // todo check fu, cu order*/
         return 0;
     }
 
 
     braid_Int Refine(braid_Vector cu, braid_Vector *fu, BraidCoarsenRefStatus &status)
     override {
-        this->Clone(cu, fu);
+       /* Clone(cu, fu);
 
         auto *sp_fu = (SPGridFunction *) (*fu)->value;
         auto *sp_cu = (SPGridFunction *) cu->value;
@@ -399,7 +401,7 @@ public:
         status.GetCTstop(&t_upper);
         //status.GetFTstop(&t_upper);
 
-        m_spIntegratorF->apply(*sp_cu, t_upper, sp_fu->cast_const(), t_lower); // todo check fu, cu order
+        m_spIntegratorF->apply(*sp_cu, t_upper, sp_fu->cast_const(), t_lower); // todo check fu, cu order*/
 
         return 0;
     }

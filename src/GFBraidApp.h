@@ -42,9 +42,12 @@ public:
 
     typedef GFBraidApp<TDomain, TAlgebra> this_type;
 
+    SmartPtr <SpaceTimeCommunicator> m_comm;
+protected:
     // -----------------------------------------------------------------------------------------------------------------
     // members for vector creation / initialization
     // -----------------------------------------------------------------------------------------------------------------
+
     const char *name;
     SPGridFunction m_u0; // for t = tstart
     SPData m_data;
@@ -57,13 +60,13 @@ public:
 
     SPScriptor m_out;
 
-    SmartPtr <SpaceTimeCommunicator> m_comm;
-
 
     std::ofstream debugwriter;
-    Talasma timer;
+    TraceTools::Talasma timer;
 
 #if TRACE_TIMINGS == 1
+
+
     TraceTools::Redoran redoran;
 #endif
 
@@ -76,16 +79,14 @@ public:
      * Note that this default constructor does not create a consistent object. The parameter t_comm (of type MPI_Comm)
      * for the temporal communication has to be set.
      */
-    GFBraidApp() : GFBraidApp(nullptr, 0, 10, 10) {
-
-    }
+public:
+    GFBraidApp() : BraidApp(MPI_COMM_NULL, 0.0, 10.0, 10) {}
 
     GFBraidApp(MPI_Comm mpi_temporal, double tstart, double tstop, int steps)
-            : BraidApp(mpi_temporal, tstart, tstop, steps) {
+    : BraidApp(mpi_temporal, tstart, tstop, steps)
+    {}
 
-    }
-
-    ~GFBraidApp() = default;
+    ~GFBraidApp() {} ;
 
 
     // -----------------------------------------------------------------------------------------------------------------

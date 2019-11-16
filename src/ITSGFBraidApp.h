@@ -111,11 +111,13 @@ public:
     /****************************************************************************
     * Constructor / Destructur
     ***************************************************************************/
-    ITSGFBraidApp() : GFBraidApp<TDomain, TAlgebra>() {
-        this->name = "Leveldependend Higher Order Time Discretization";
+    ITSGFBraidApp() : GFBraidApp<TDomain, TAlgebra>()
+	{
+        this->name = "Level dependent Higher Order Time Discretization";
     }
 
-    virtual ~ITSGFBraidApp() {
+    ~ITSGFBraidApp()
+    {
         delete[] this->m_lvl;
     };
 
@@ -180,16 +182,17 @@ public:
     }
 
     void init() override {
-        std::stringstream ss;
-        ss << "job_" << this->m_comm->getTemporalRank() << ".output";
-        this->debugwriter.open(ss.str());
+    	std::stringstream ss;
+    	ss << "job_" << this->m_comm->getTemporalRank() << ".output";
+    	this->debugwriter.open(ss.str());
 
-        this->timer.start();
+    	base_type::timer.start();
 #if TRACE_TIMINGS == 1
         this->redoran = Redoran(this->m_levels);
 #endif
 
 #if TRACE_GRIDFUNCTION == 1
+
         this->matlab = SmartPtr<MATLABScriptor<TDomain, TAlgebra> >(new MATLABScriptor<TDomain, TAlgebra>(this->debugwriter));
 #endif
         const ug::GridLevel gridlevel = this->m_u0->grid_level();
@@ -234,13 +237,13 @@ public:
             pstatus.GetIter(&iteration);
 #if TRACE_INDEX == 1
             if (fstop == nullptr) {
-                this->debugwriter << "u_" << u->index << " = step_" << l << "_n( u_" << u->index << ", u_"
+                debugwriter << "u_" << u->index << " = step_" << l << "_n( u_" << u->index << ", u_"
                                   << ustop->index
                                   << ", null, " << t_start << ", " << current_dt << ", " << t_stop << ", " << l
                                   << ")"
                                   << "\t\t % " << tindex << std::endl;
             } else {
-                this->debugwriter << "u_" << u->index << " = step_" << l << "_r( u_" << u->index << ", u_"
+                debugwriter << "u_" << u->index << " = step_" << l << "_r( u_" << u->index << ", u_"
                                   << ustop->index
                                   << ", u_"
                                   << fstop->index << ", " << t_start << ", " << current_dt << ", " << t_stop << ", "
@@ -499,7 +502,7 @@ public:
 
     braid_Int Coarsen(braid_Vector fu, braid_Vector *cu, BraidCoarsenRefStatus &status)
     override {
-        this->Clone(fu, cu);
+    	/*Clone(fu, cu);
 
         auto *sp_fu = (SPGridFunction *) fu->value;
         auto *sp_cu = (SPGridFunction *) (*cu)->value;
@@ -509,15 +512,15 @@ public:
         status.GetT(&t_lower);
         status.GetCTstop(&t_upper);
         //status.GetFTstop(&t_upper);
-
-        m_spIntegratorC->apply(*sp_fu, t_upper, sp_cu->cast_const(), t_lower); // todo check fu, cu order
+*/
+        // m_spIntegratorC->apply(*sp_fu, t_upper, sp_cu->cast_const(), t_lower); // todo check fu, cu order
         return 0;
     }
 
 
     braid_Int Refine(braid_Vector cu, braid_Vector *fu, BraidCoarsenRefStatus &status)
     override {
-        this->Clone(cu, fu);
+    	/*Clone(cu, fu);
 
         auto *sp_fu = (SPGridFunction *) (*fu)->value;
         auto *sp_cu = (SPGridFunction *) cu->value;
@@ -528,8 +531,8 @@ public:
         status.GetCTstop(&t_upper);
         //status.GetFTstop(&t_upper);
 
-        m_spIntegratorF->apply(*sp_cu, t_upper, sp_fu->cast_const(), t_lower); // todo check fu, cu order
-
+        // m_spIntegratorF->apply(*sp_cu, t_upper, sp_fu->cast_const(), t_lower); // todo check fu, cu order
+*/
         return 0;
     }
 };

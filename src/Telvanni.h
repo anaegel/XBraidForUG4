@@ -76,7 +76,8 @@ public:
 
     Redoran(int maxlevel){
         for(int i = Observer::T_INIT; i != Observer::T_RECV;i++){
-            timer.emplace_back(Telvanni());
+          //  timer.emplace_back(Telvanni());
+            timer.push_back(Telvanni());
         }
 
 

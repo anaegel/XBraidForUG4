@@ -16,6 +16,7 @@
 #include "lib_algebra/operator/interface/linear_operator_inverse.h"
 #include "../../plugins/Limex/time_disc/time_integrator.hpp"
 #include "lib_disc/dof_manager/function_pattern.h"
+
 #include "GFBraidApp.h"
 
 template<typename TDomain, typename TAlgebra>
@@ -26,7 +27,9 @@ public:
     /****************************************************************************
     * Typedefs
     ***************************************************************************/
-    typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
+    typedef GFBraidApp<TDomain, TAlgebra> base_type;
+
+	typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
 
     typedef SmartPtr<TGridFunction> SPGridFunction;
 
@@ -98,7 +101,7 @@ public:
         this->name = "uniform";
     }
 
-    virtual ~RGFBraidApp() = default;
+    ~RGFBraidApp() = default;
 
     /****************************************************************************
     * Functions to outsource // todo
@@ -114,11 +117,11 @@ public:
 
 
     void init() override {
-        std::stringstream ss;
-        ss << "job_" << this->m_comm->getTemporalRank() << ".output";
-        this->debugwriter.open(ss.str());
 
-        this->timer.start();
+    	 std::stringstream ss;
+    	 ss << "job_" << this->m_comm->getTemporalRank() << ".output";
+    	base_type::debugwriter.open(ss.str());
+    	base_type::timer.start();
 #if TRACE_TIMINGS == 1
         this->redoran = Redoran(this->m_levels);
 #endif
@@ -126,6 +129,7 @@ public:
 
 
 #if TRACE_GRIDFUNCTION == 1
+
         this->matlab = SmartPtr<MATLABScriptor<TDomain, TAlgebra> >(new MATLABScriptor<TDomain, TAlgebra>(this->debugwriter));
 #endif
         const ug::GridLevel gridlevel = this->m_u0->grid_level();
@@ -327,8 +331,8 @@ public:
                 this->lastiter[l] = iteration;
                 if (this->m_timing) {
                     double diff, total;
-                    this->timer.now(total, diff);
-                    this->debugwriter << std::setw(10) << "@time:"
+                    base_type::timer.now(total, diff);
+                    base_type::debugwriter << std::setw(10) << "@time:"
                             << std::setw(12) << total << " ; "
                             << std::setw(12) << diff << " Begin iteration for level" << l << std::endl;
                 }
@@ -542,7 +546,7 @@ public:
 
     braid_Int Coarsen(braid_Vector fu, braid_Vector *cu, BraidCoarsenRefStatus &status)
     override {
-        this->Clone(fu, cu);
+     /*	Clone(fu, cu);
 
         auto *sp_fu = (SPGridFunction *) fu->value;
         auto *sp_cu = (SPGridFunction *) (*cu)->value;
@@ -553,14 +557,14 @@ public:
         status.GetCTstop(&t_upper);
         //status.GetFTstop(&t_upper);
 
-        m_spIntegratorC->apply(*sp_fu, t_upper, sp_cu->cast_const(), t_lower); // todo check fu, cu order
+        m_spIntegratorC->apply(*sp_fu, t_upper, sp_cu->cast_const(), t_lower); // todo check fu, cu order*/
         return 0;
     }
 
 
     braid_Int Refine(braid_Vector cu, braid_Vector *fu, BraidCoarsenRefStatus &status)
     override {
-        this->Clone(cu, fu);
+    	/*Clone(cu, fu);
 
         auto *sp_fu = (SPGridFunction *) (*fu)->value;
         auto *sp_cu = (SPGridFunction *) cu->value;
@@ -571,7 +575,7 @@ public:
         status.GetCTstop(&t_upper);
         //status.GetFTstop(&t_upper);
 
-        m_spIntegratorF->apply(*sp_cu, t_upper, sp_fu->cast_const(), t_lower); // todo check fu, cu order
+        m_spIntegratorF->apply(*sp_cu, t_upper, sp_fu->cast_const(), t_lower); // todo check fu, cu order*/
 
         return 0;
     }
