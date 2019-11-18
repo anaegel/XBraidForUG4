@@ -5,7 +5,11 @@
 #ifndef UG_PLUGIN_XBRAIDFORUG4_BRAIDVECTORSTRUCT_H
 #define UG_PLUGIN_XBRAIDFORUG4_BRAIDVECTORSTRUCT_H
 
+
+// XBraid lib.
 #include "../libs/xbraid/braid/braid.hpp"
+
+// Plugin lib.
 #include "trace_tools_config.h"
 
 /*
