@@ -5,20 +5,20 @@
 #ifndef UG_PLUGIN_XBRAIDFORUG4_PBRAID_H
 #define UG_PLUGIN_XBRAIDFORUG4_PBRAID_H
 
+// UG4 lib.
 #include "common/assert.h"
 #include "pcl/pcl_comm_world.h"
 #include "lib_disc/time_disc/theta_time_step.h"
 #include "lib_disc/time_disc/solution_time_series.h"
+#include "bindings/lua/lua_function_handle.h"
+#include "bindings/lua/lua_user_data.h"
 
+// This lib.
 #include "PBraidApp.h"
 #include "RGFBraidApp.h"
 #include "MGFBraidApp.h"
 #include "ITSGFBraidApp.h"
 #include "SpaceTimeCommunicator.h"
-
-#include "bindings/lua/lua_function_handle.h"
-#include "bindings/lua/lua_user_data.h"
-
 #include "Scriptor.h"
 
 template<typename TDomain, typename TAlgebra>
@@ -38,13 +38,14 @@ public:
 
     typedef SmartPtr<ug::DomainDiscretization<TDomain, TAlgebra> > SPDomainDisc;
 
-    typedef SmartPtr<SpaceTimeCommunicator> SPXCommunicator;
+    typedef typename ug::XBraidForUG4::SpaceTimeCommunicator TSpaceTimeCommunicator;
+    typedef SmartPtr<TSpaceTimeCommunicator> SPXCommunicator;
     typedef SmartPtr<Scriptor<TDomain, TAlgebra> > SPScriptor;
 
 private:
     BraidCore *m_bc = nullptr;
     SPBraidApp m_app;
-    SmartPtr <SpaceTimeCommunicator> m_comm;
+    SmartPtr <TSpaceTimeCommunicator> m_comm;
     const char *m_filename;
 
 public:
@@ -254,8 +255,14 @@ public:
         this->m_app->setVectorGenerator(generator);
         this->m_app->setGeneratorComponent(cmp);
         this->m_app->setScriptor(output);
+
+        UG_LOG("Init...")
         this->m_app->init();
+
+        UG_LOG("Drive...")
         this->m_bc->Drive();
+
+        UG_LOG("Release...")
         this->m_app->release();
         return 0;
     }

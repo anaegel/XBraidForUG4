@@ -30,7 +30,7 @@ namespace ug{
                 typedef ug::GridFunction<TDomain, TAlgebra> TGridFunction;
                 typedef SmartPtr<ug::GridFunction<TDomain, TAlgebra> > SPGridFunction;
                 typedef SmartPtr<ug::UserData<double, TGridFunction::dim> > SPData;
-                typedef SmartPtr<SpaceTimeCommunicator> SPXCommunicator;
+                typedef SmartPtr<XBraidForUG4::SpaceTimeCommunicator> SPXCommunicator;
                 typedef SmartPtr<ug::VTKOutput<TDomain::dim> > SPVTKOutput;
 
 
@@ -176,7 +176,7 @@ namespace ug{
                 // todo completelua
 
 
-                typedef SmartPtr<SpaceTimeCommunicator> SPXCommunicator;
+                typedef SmartPtr<XBraidForUG4::SpaceTimeCommunicator> SPXCommunicator;
                 typedef SmartPtr<GFBraidApp<TDomain, TAlgebra> > SPBraidApp;
                 typedef PBraid<TDomain, TAlgebra> TBraid;
                 string name = string("Braid").append(suffix);
@@ -292,6 +292,7 @@ namespace ug{
     InitUGPlugin_XBraidForUG4(Registry *reg, string grp) {
         using namespace XBraidForUG4;
         using namespace TraceTools;
+        using XBraidForUG4::SpaceTimeCommunicator;
         grp.append("XBraidForUG4");
         reg->add_class_<SpaceTimeCommunicator>("SpaceTimeCommunicator","XBraid","")
                 .add_method("split",&SpaceTimeCommunicator::split)

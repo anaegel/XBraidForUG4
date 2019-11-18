@@ -7,6 +7,7 @@
 
 #include <ugbase.h>
 
+// UG4 lib.
 #include "common/math/math_vector_matrix/math_vector_functions.h"
 #include "common/serialization.h"
 #include "lib_disc/io/vtkoutput.h"
@@ -16,6 +17,7 @@
 #include "lib_algebra/operator/interface/linear_operator_inverse.h"
 #include "../../plugins/Limex/time_disc/time_integrator.hpp"
 
+// This plugin.
 #include "GFBraidApp.h"
 
 template<typename TDomain, typename TAlgebra>
@@ -26,10 +28,10 @@ public:
     typedef SmartPtr<TGridFunction> SPGridFunction;
 
     typedef ug::ThetaTimeStep<TAlgebra> TTimeStep;
-    typedef SmartPtr<ug::ThetaTimeStep<TAlgebra> > SPTimeStep;
+    typedef SmartPtr<TTimeStep> SPTimeStep;
 
     typedef ug::VectorTimeSeries<typename TAlgebra::vector_type> TTimeSeries;
-    typedef SmartPtr<ug::VectorTimeSeries<typename TAlgebra::vector_type> > SPTimeSeries;
+    typedef SmartPtr<TTimeSeries> SPTimeSeries;
 
     typedef SmartPtr<ug::ILinearOperatorInverse<typename TAlgebra::vector_type> > SPSolver;
 
@@ -39,6 +41,8 @@ public:
 
     typedef SmartPtr<ug::VTKOutput<TDomain::dim> > SPOutput;
 
+    typedef typename ug::XBraidForUG4::SpaceTimeCommunicator TSpaceTimeCommunicator;
+
     SPTimeStep timeDisc;
     SPSolver linSolver;
     SPTimeIntegrator m_spIntegratorC;
@@ -47,7 +51,7 @@ public:
 
 
     SPGridFunction ux; // for t > tstart
-    SmartPtr<SpaceTimeCommunicator> comm;
+    SmartPtr<TSpaceTimeCommunicator> comm;
 
     const char *filename = "FixedFilename";
 
@@ -157,49 +161,22 @@ public:
         auto *sp_u_stop_approx = (SPGridFunction *) ustop->value;
 
         auto *sp_rhs = new SPGridFunction(new TGridFunction(*this->u0));
-        /*std::cout << std::endl;
-        std::cout << std::endl;
-        std::cout << std::endl;
-        std::cout << std::endl;
-        std::cout << pointerToString((void*)sp_rhs) << std::endl;
-        std::cout << pointerToString((void*)sp_u_start) << std::endl;
-        std::cout << pointerToString((void*)sp_u_stop) << std::endl;
-        std::cout << pointerToString((void*)sp_u_stop_approx) << std::endl;*/
-
-
-
-        //auto *rhs = (BraidVector *) malloc(sizeof(BraidVector));
-        //auto *sp_rhs_val_ref = new SPGridFunction(new TGridFunction(*u0));
-        //rhs->value = sp_rhs_val_ref;
-        //fstop = rhs;
 
         const ug::GridLevel gridlevel = sp_u_stop->get()->grid_level();
-
 
         SPTimeSeries series = SPTimeSeries(new TTimeSeries());
         series->push(sp_u_start->get()->clone(), tstart);
         timeDisc->prepare_step(series, current_dt);
 
         if (current_dt != assembled_dt) { // todo is close?
-
+        	// Reassemble operator.
             timeDisc->assemble_linear(*A, *sp_rhs->get(), gridlevel);
             linSolver->init(A, *sp_u_stop_approx->get());
             assembled_dt = current_dt;
         } else {
+        	// Assemble rhs only.
             timeDisc->assemble_rhs(*sp_rhs->get(), gridlevel);
         }
-
-        /*if (fstop != nullptr) {
-            auto *sp_rhs_stop = (SPGridFunction *) fstop->value;
-
-            write(sp_u_stop_approx->get(),7055,0.01,"u_stop_approx");
-            write(sp_u_start->get(),7055,0.01,"u_start");
-            write(sp_rhs->get(),75055,0.01, "rhs");
-            write(sp_rhs_stop->get(),75055,0.01,"rhs_stop");
-            write(sp_u_stop->get(),75055,0.01,"u_stop");
-            exit(80);
-            VecAdd(1,*sp_u_stop_approx->get(),1,*sp_rhs_stop->get());
-        }*/
 
         bool success = linSolver->apply(*sp_u_stop_approx->get(), *sp_rhs->get());
 

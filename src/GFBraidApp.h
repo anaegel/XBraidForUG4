@@ -43,8 +43,8 @@ public:
     typedef SmartPtr<ug::IDomainDiscretization<TAlgebra> > SPDomainDisc;
     typedef SmartPtr<Scriptor<TDomain, TAlgebra> > SPScriptor;
 
-    using ug::XBraidForUG4::SpaceTimeCommunicator;
-    SmartPtr <SpaceTimeCommunicator> m_comm;
+    typedef typename ug::XBraidForUG4::SpaceTimeCommunicator TSpaceTimeCommunicator;
+    SmartPtr <TSpaceTimeCommunicator> m_comm;
 protected:
     // -----------------------------------------------------------------------------------------------------------------
     // members for vector creation / initialization

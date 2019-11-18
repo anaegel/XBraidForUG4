@@ -10,8 +10,10 @@
 #include "common/assert.h"
 #include "pcl/pcl_comm_world.h"
 
-#include "../libs/xbraid/braid/braid.hpp"
+#include "../libs/xbraid/braid/braid.hpp"  // for BraidUtil
 
+namespace ug {
+namespace XBraidForUG4 {
 /**
  * \brief class for splitting the global communicator into a spatial and a temporal communicator
  *
@@ -102,5 +104,7 @@ public:
     }
 };
 
+} // namespace XBraidForUG4
+} // namespace ug
 
 #endif //UG_PLUGIN_XBRAIDFORUG4_SPACETIMECOMMUNICATOR_H
