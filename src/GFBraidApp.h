@@ -7,15 +7,16 @@
 
 
 
-
+// Std lib.
 #include <iomanip>
 #include <sstream>
 
+
+// This lib.
+#include "trace_tools_config.h"
 #include "BraidVectorStruct.h"
 #include "SpaceTimeCommunicator.h"
 #include "Scriptor.h"
-
-#include "trace_tools_config.h"
 #include "Talasma.h"
 #include "Telvanni.h"
 // #include "MemoryObserver.h"
@@ -33,15 +34,16 @@ public:
     // -----------------------------------------------------------------------------------------------------------------
     // type definition to shorten identifier
     // -----------------------------------------------------------------------------------------------------------------
-    typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
+	typedef GFBraidApp<TDomain, TAlgebra> this_type;
+
+	typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
     typedef SmartPtr<TGridFunction> SPGridFunction;
     typedef SmartPtr<ug::UserData<double, TGridFunction::dim> > SPData;
     typedef typename TAlgebra::vector_type::value_type vector_value_type;
     typedef SmartPtr<ug::IDomainDiscretization<TAlgebra> > SPDomainDisc;
     typedef SmartPtr<Scriptor<TDomain, TAlgebra> > SPScriptor;
 
-    typedef GFBraidApp<TDomain, TAlgebra> this_type;
-
+    using ug::XBraidForUG4::SpaceTimeCommunicator;
     SmartPtr <SpaceTimeCommunicator> m_comm;
 protected:
     // -----------------------------------------------------------------------------------------------------------------
@@ -52,7 +54,7 @@ protected:
     SPGridFunction m_u0; // for t = tstart
     SPData m_data;
     SPDomainDisc m_domainDisc; // for adjust gridfunction in generator
-    const char *m_cmp; // function component for interpolation
+    const char *m_cmp;  // function component for interpolation
 
     bool m_timing = true;
     bool m_verbose = true;
@@ -201,6 +203,8 @@ public:
     // -----------------------------------------------------------------------------------------------------------------
     // Braid Methods
     // -----------------------------------------------------------------------------------------------------------------
+
+    //! Allocate a new vector in @a *u_ptr and initialize it with an initial guess appropriate for time @a t. */
     braid_Int Init(braid_Real t, braid_Vector *u_ptr) override {
 
 #if TRACE_INDEX == 1
@@ -233,7 +237,7 @@ public:
         return 0;
     };
 
-
+    //! Allocate a new vector in @a *v_ptr, which is a deep copy of @a u_.
     braid_Int Clone(braid_Vector u, braid_Vector *v_ptr) override {
         StartRedoran(Observer::T_CLONE);
 #if TRACE_INDEX == 1
@@ -260,6 +264,7 @@ public:
         return 0;
     };
 
+    //! De-allocate the vector @a u.
     braid_Int Free(braid_Vector u) override {
         StartRedoran(Observer::T_FREE);
 
@@ -282,6 +287,7 @@ public:
         return 0;
     };
 
+    //! Perform the operation: @a y = @a alpha * @a x + @a beta * @a y.
     braid_Int Sum(double alpha, braid_Vector x, double beta, braid_Vector y) override {
         StartRedoran(Observer::T_SUM);
 #if TRACE_INDEX == 1
@@ -312,6 +318,7 @@ public:
         return 0;
     };
 
+    //! Some output.
     braid_Int Access(braid_Vector u, BraidAccessStatus &astatus) override {
         StartRedoran(Observer::T_ACCESS);
 #if TRACE_INDEX == 1
@@ -351,6 +358,7 @@ public:
 
     };
 
+protected:
     inline void pack(void *buffer, TGridFunction *u_ref, int *bufferSize) {
 
         char *chBuffer = (char *) buffer;
@@ -399,7 +407,8 @@ public:
 
     }
 
-
+public:
+    //! Define buffer size.
     braid_Int BufSize(braid_Int *size_ptr, BraidBufferStatus &bstatus) override {
         *size_ptr = (sizeof(vector_value_type) * (*this->m_u0).size()
                      + sizeof(size_t))
@@ -407,21 +416,20 @@ public:
         return 0;
     };
 
-
+    //! Packing buffer.
     braid_Int BufPack(braid_Vector u, void *buffer,
                       BraidBufferStatus &bstatus) override {
-        StartRedoran(Observer::T_SEND);
+    	// Timing BEGIN
+    	StartRedoran(Observer::T_SEND);
 
-        int bufferSize;
 #if TRACE_INDEX == 1
         if (this->m_verbose) {
             debugwriter << "send(u_" << u->index << ")" << std::endl << std::flush;
         }
 #endif
 
+        int bufferSize;
         auto *u_ref = (SPGridFunction *) u->value;
-
-
         pack(buffer, u_ref->get(), &bufferSize);
 
 #if TRACE_INDEX == 1
@@ -431,6 +439,7 @@ public:
 #endif
         bstatus.SetSize(bufferSize);
 
+        // Timing END
         StopRedoran(Observer::T_SEND);
 #if TRACE_RECVTIME == 1
         double diff, total;
@@ -442,7 +451,7 @@ public:
         return 0;
     };
 
-
+    //! Unpacking buffer.
     braid_Int BufUnpack(void *buffer, braid_Vector *u_ptr, BraidBufferStatus &bstatus) override {
 #if TRACE_RECVTIME == 1
         double diff, total;
@@ -451,6 +460,7 @@ public:
                           << std::setw(12) << total << " ; "
                           << std::setw(12) << diff << " Vector Received" << std::endl;
 #endif
+        // Timing BEGIN.
         StartRedoran(Observer::T_RECV);
 #if TRACE_INDEX == 1
         if (this->m_verbose) {
@@ -464,12 +474,15 @@ public:
         auto *sp_u = new SPGridFunction(new TGridFunction(*this->m_u0)); // todo
         unpack(buffer, sp_u->get(), &bufferSize);
         u->value = sp_u;
+
 #if TRACE_INDEX == 1
         u->index = indexpool;
         indexpool++;
         MATLAB(sp_u->get(),u->index,-1.0);
 #endif
         *u_ptr = u;
+
+        // Timing END.
         StopRedoran(Observer::T_RECV);
         return 0;
     };
