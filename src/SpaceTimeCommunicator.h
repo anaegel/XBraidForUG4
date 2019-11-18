@@ -23,17 +23,20 @@ namespace XBraidForUG4 {
 class SpaceTimeCommunicator {
 
 public:
-    MPI_Comm GLOBAL = PCL_COMM_WORLD;
-    MPI_Comm TEMPORAL = PCL_COMM_WORLD;
-    MPI_Comm SPATIAL = PCL_COMM_WORLD;
-
+    MPI_Comm GLOBAL;
+    MPI_Comm TEMPORAL;
+    MPI_Comm SPATIAL;
+protected:
     int globalsize = 1;
     int temporalsize = 1;
     int spatialsize = 1;
 
     bool verbose = true;
 
-    SpaceTimeCommunicator() = default;
+public:
+    SpaceTimeCommunicator()
+    : GLOBAL(PCL_COMM_WORLD), TEMPORAL(PCL_COMM_WORLD),  SPATIAL(PCL_COMM_WORLD)
+    {}
 
     ~SpaceTimeCommunicator() = default;
 
