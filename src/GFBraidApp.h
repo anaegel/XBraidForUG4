@@ -37,13 +37,14 @@ public:
 	typedef GFBraidApp<TDomain, TAlgebra> this_type;
 
 	typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
+    typedef typename TAlgebra::vector_type::value_type vector_value_type;
+    typedef typename ug::XBraidForUG4::SpaceTimeCommunicator TSpaceTimeCommunicator;
+
     typedef SmartPtr<TGridFunction> SPGridFunction;
     typedef SmartPtr<ug::UserData<double, TGridFunction::dim> > SPData;
-    typedef typename TAlgebra::vector_type::value_type vector_value_type;
     typedef SmartPtr<ug::IDomainDiscretization<TAlgebra> > SPDomainDisc;
     typedef SmartPtr<Scriptor<TDomain, TAlgebra> > SPScriptor;
 
-    typedef typename ug::XBraidForUG4::SpaceTimeCommunicator TSpaceTimeCommunicator;
     SmartPtr <TSpaceTimeCommunicator> m_comm;
 protected:
     // -----------------------------------------------------------------------------------------------------------------
@@ -67,8 +68,6 @@ protected:
     TraceTools::Talasma timer;
 
 #if TRACE_TIMINGS == 1
-
-
     TraceTools::Redoran redoran;
 #endif
 
@@ -237,8 +236,9 @@ public:
         return 0;
     };
 
-    //! Allocate a new vector in @a *v_ptr, which is a deep copy of @a u_.
+    //! Allocate a new vector in @a *v_ptr, which is a deep copy of @a u.
     braid_Int Clone(braid_Vector u, braid_Vector *v_ptr) override {
+    	// Timing BEGIN.
         StartRedoran(Observer::T_CLONE);
 #if TRACE_INDEX == 1
         if (this->m_verbose) {
@@ -246,12 +246,13 @@ public:
         }
 #endif
 
-        auto *v = (BraidVector *) malloc(sizeof(BraidVector));
+        // Create (two-stage).
+        SPGridFunction *uref = (SPGridFunction *) u->value;  // Ptr to (existing) SmartPtr.
+        SPGridFunction *vref = new SPGridFunction();         // STEP A: Create (invalid) SmartPtr object.
+        (*vref) = uref->get()->clone();       				 // Create a new GridFunction object; assign its SmartPtr.
 
-        auto *uref = (SPGridFunction *) u->value;
-        SPGridFunction *vref = new SPGridFunction();
-        *vref = uref->get()->clone();
-        v->value = vref;
+        BraidVector *v = (BraidVector *) malloc(sizeof(BraidVector)); // STEP B: Create a ptr to a (new) BraidVector.
+        v->value = vref; // Store ptr
 
 #if TRACE_INDEX == 1
         v->index = indexpool;
@@ -259,13 +260,17 @@ public:
         MATLAB(vref->get(), v->index, -1.0);
 #endif
 
+        // Assign return value.
         *v_ptr = v;
+
+        // Timing END.
         StopRedoran(Observer::T_CLONE);
         return 0;
     };
 
     //! De-allocate the vector @a u.
     braid_Int Free(braid_Vector u) override {
+    	// Timing BEGIN.
         StartRedoran(Observer::T_FREE);
 
 #if TRACE_INDEX == 1
@@ -279,10 +284,13 @@ public:
             }
     #endif
 #endif
-        auto *u_value = (SPGridFunction *) u->value;
-        delete u_value;
-        free(u);
 
+        // Delete (two-stage).
+        SPGridFunction *u_value = (SPGridFunction *) u->value;
+        delete u_value;  // STEP A: Delete SmartPtr object (which deletes real object, if applicable).
+        free(u);         // STEP B: Delete BraidVector
+
+        // Timing END.
         StopRedoran(Observer::T_FREE);
         return 0;
     };
@@ -308,9 +316,9 @@ public:
 #if TRACE_CONST == 1
         y->m_const = false;
 #endif
-        auto *xref = (SPGridFunction *) x->value;
-        auto *yref = (SPGridFunction *) y->value;
-        VecAdd(beta, *yref->get(), alpha, *xref->get());
+        SPGridFunction *xref = (SPGridFunction *) x->value;
+        SPGridFunction *yref = (SPGridFunction *) y->value;
+        VecAdd(beta, *(yref->get()), alpha, *(xref->get()));
         StopRedoran(Observer::T_SUM);
 #if TRACE_INDEX ==1
         MATLAB(yref->get(), y->index, -1.0);

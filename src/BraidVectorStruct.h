@@ -20,7 +20,6 @@
 typedef struct _braid_Vector_struct {
     void *value;
 
-
 #if TRACE_INDEX == 1
     size_t index = 0;
 #endif
