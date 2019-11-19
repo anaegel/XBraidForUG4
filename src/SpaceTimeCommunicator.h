@@ -27,15 +27,15 @@ public:
     MPI_Comm TEMPORAL;
     MPI_Comm SPATIAL;
 protected:
-    int globalsize = 1;
-    int temporalsize = 1;
-    int spatialsize = 1;
+    int m_globalsize = 1;
+    int m_temporalsize = 1;
+    int m_spatialsize = 1;
 
-    bool verbose = true;
+    bool m_verbose;
 
 public:
     SpaceTimeCommunicator()
-    : GLOBAL(PCL_COMM_WORLD), TEMPORAL(PCL_COMM_WORLD),  SPATIAL(PCL_COMM_WORLD)
+    : GLOBAL(PCL_COMM_WORLD), TEMPORAL(PCL_COMM_WORLD),  SPATIAL(PCL_COMM_WORLD), m_verbose(true)
     {}
 
     ~SpaceTimeCommunicator() = default;
@@ -46,19 +46,19 @@ public:
         GLOBAL = PCL_COMM_WORLD;
 
         UG_ASSERT(world_size % numSpatialProcesses == 0, "process_x * process_t != total_process");
-        globalsize = world_size;
-        spatialsize = numSpatialProcesses;
-        temporalsize = world_size / numSpatialProcesses;
+        m_globalsize = world_size;
+        m_spatialsize = numSpatialProcesses;
+        m_temporalsize = world_size / numSpatialProcesses;
 
         BraidUtil bu = BraidUtil();
-        if (verbose) {
+        if (m_verbose) {
             std::cout << "World size before splitting is:\t" << world_size << std::endl;
         }
 
 
         bu.SplitCommworld(&GLOBAL, numSpatialProcesses, &SPATIAL, &TEMPORAL);
 
-        if (verbose) {
+        if (m_verbose) {
             MPI_Comm_size(GLOBAL, &world_size);
             std::cout << "World size after splitting is:\t" << world_size << std::endl;
             MPI_Comm_size(TEMPORAL, &world_size);
@@ -77,15 +77,15 @@ public:
     }
 
     int getGlobalSize() {
-        return globalsize;
+        return m_globalsize;
     }
 
     int getTemporalSize() {
-        return temporalsize;
+        return m_temporalsize;
     }
 
     int getSpatialSize() {
-        return spatialsize;
+        return m_spatialsize;
     }
 
     int getTemporalRank() {
