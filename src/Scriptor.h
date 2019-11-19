@@ -23,9 +23,9 @@ public:
 
     virtual bool write(TGridFunction *u, int index, double time) = 0;
 
-    virtual bool write(TGridFunction *u, int index, double time, int iteration, int level) {};
+    virtual bool write(TGridFunction *u, int index, double time, int iteration, int level) {return true;};
 
-    virtual void print(const char *filename, TGridFunction &u, int index, double time) {};
+    virtual void print(const char *filename, TGridFunction &u, int index, double time) {return true;};
 };
 
 /**
