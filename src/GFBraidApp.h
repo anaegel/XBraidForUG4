@@ -45,6 +45,8 @@ public:
     typedef SmartPtr<ug::IDomainDiscretization<TAlgebra> > SPDomainDisc;
     typedef SmartPtr<Scriptor<TDomain, TAlgebra> > SPScriptor;
 
+    typedef typename ug::XBraidForUG4::BraidVectorFunctors<TGridFunction> TBraidVectorFunctors;
+
     SmartPtr <TSpaceTimeCommunicator> m_comm;
 protected:
     // -----------------------------------------------------------------------------------------------------------------
@@ -238,7 +240,7 @@ public:
 
     //! Allocate a new vector in @a *v_ptr, which is a deep copy of @a u.
     braid_Int Clone(braid_Vector u, braid_Vector *v_ptr) override {
-    	// Timing BEGIN.
+    	// Profiling BEGIN.
         StartRedoran(Observer::T_CLONE);
 #if TRACE_INDEX == 1
         if (this->m_verbose) {
@@ -263,14 +265,14 @@ public:
         // Assign return value.
         *v_ptr = v;
 
-        // Timing END.
+        // Profiling END.
         StopRedoran(Observer::T_CLONE);
         return 0;
     };
 
     //! De-allocate the vector @a u.
     braid_Int Free(braid_Vector u) override {
-    	// Timing BEGIN.
+    	// Profiling BEGIN.
         StartRedoran(Observer::T_FREE);
 
 #if TRACE_INDEX == 1
@@ -290,14 +292,15 @@ public:
         delete u_value;  // STEP A: Delete SmartPtr object (which deletes real object, if applicable).
         free(u);         // STEP B: Delete BraidVector
 
-        // Timing END.
+        // Profiling END.
         StopRedoran(Observer::T_FREE);
         return 0;
     };
 
     //! Perform the operation: @a y = @a alpha * @a x + @a beta * @a y.
     braid_Int Sum(double alpha, braid_Vector x, double beta, braid_Vector y) override {
-        StartRedoran(Observer::T_SUM);
+    	// Profiling BEGIN.
+    	StartRedoran(Observer::T_SUM);
 #if TRACE_INDEX == 1
         if (this->m_verbose) {
             if (alpha == 0) {
@@ -316,9 +319,15 @@ public:
 #if TRACE_CONST == 1
         y->m_const = false;
 #endif
-        SPGridFunction *xref = (SPGridFunction *) x->value;
-        SPGridFunction *yref = (SPGridFunction *) y->value;
-        VecAdd(beta, *(yref->get()), alpha, *(xref->get()));
+       // SPGridFunction *xref = (SPGridFunction *) x->value;
+       // SPGridFunction *yref = (SPGridFunction *) y->value;
+       // VecAdd(beta, *(yref->get()), alpha, *(xref->get()));
+
+        const TGridFunction& xvec = TBraidVectorFunctors().as_grid_function(*x);
+        TGridFunction& yvec = TBraidVectorFunctors().as_grid_function(*y);
+        VecAdd(beta, yvec, alpha, xvec);
+
+        // Profiling END.
         StopRedoran(Observer::T_SUM);
 #if TRACE_INDEX ==1
         MATLAB(yref->get(), y->index, -1.0);
@@ -427,7 +436,7 @@ public:
     //! Packing buffer.
     braid_Int BufPack(braid_Vector u, void *buffer,
                       BraidBufferStatus &bstatus) override {
-    	// Timing BEGIN
+    	// Profiling BEGIN
     	StartRedoran(Observer::T_SEND);
 
 #if TRACE_INDEX == 1
@@ -447,7 +456,7 @@ public:
 #endif
         bstatus.SetSize(bufferSize);
 
-        // Timing END
+        // Profiling END
         StopRedoran(Observer::T_SEND);
 #if TRACE_RECVTIME == 1
         double diff, total;
@@ -468,7 +477,7 @@ public:
                           << std::setw(12) << total << " ; "
                           << std::setw(12) << diff << " Vector Received" << std::endl;
 #endif
-        // Timing BEGIN.
+        // Profiling BEGIN.
         StartRedoran(Observer::T_RECV);
 #if TRACE_INDEX == 1
         if (this->m_verbose) {
@@ -490,7 +499,7 @@ public:
 #endif
         *u_ptr = u;
 
-        // Timing END.
+        // Profiling END.
         StopRedoran(Observer::T_RECV);
         return 0;
     };

@@ -11,7 +11,14 @@ Other feature like the profiling (or profiling pcl) might not work as expected.
 
 It is possible to define variables in  BraidVectorStruct.h that are respected by the compiler to define the behavior of this plugin.
 For example to
-    * get execution times for some operations (clone, init, step, assemble operator, assemble rhs, solve, residual).
-    * write out every result as a vector which can be used in matlab
-    * write out a script in matlab notation
-    * get timestamps when receiving and sending is executed
+ * get execution times for some operations (clone, init, step, assemble operator, assemble rhs, solve, residual).
+ * write out every result as a vector which can be used in matlab
+ * write out a script in matlab notation
+ * get timestamps when receiving and sending is executed
+ 
+## Possible extensions:
+Here are some ideas:
+* Provide a functor class for converting BraidVectors to GridFunctions.
+* Make `GFBraidApp` a `TimeIntegratorSubject`. Also replace scriptors by `ITimeIntegratorObserver`.
+* Consider an alternative for `Interpolate` calls which does not depend on components. 
+ 

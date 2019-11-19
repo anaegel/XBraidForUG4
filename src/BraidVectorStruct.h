@@ -38,4 +38,29 @@ size_t const_free = 0;
 size_t const_clone = 0;
 #endif
 
+namespace ug {
+namespace XBraidForUG4 {
+
+//! This functors provide the interface for BraidVectors
+template <typename TGridFunction>
+class BraidVectorFunctors
+{
+public:
+	// typedef ug::GridFunction<TDomain, TAlgebra> TGridFunction;
+	typedef SmartPtr<TGridFunction> SPGridFunction;
+
+	static SPGridFunction as_smart_pointer(BraidVector &x)
+	{ return *((SPGridFunction *) x.value); }
+
+	static TGridFunction& as_grid_function(BraidVector &x)
+	{ return *as_smart_pointer(x); }
+
+	static const TGridFunction& as_grid_function(const BraidVector &x)
+	{ return *as_smart_pointer(x); }
+
+};
+
+} // namespace XBraidForUG4
+} // namespace ug
+
 #endif //UG_PLUGIN_XBRAIDFORUG4_BRAIDVECTORSTRUCT_H
