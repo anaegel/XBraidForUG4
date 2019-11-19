@@ -18,7 +18,9 @@ For example to
  
 ## Possible extensions:
 Here are some ideas:
-* Provide a functor class for converting BraidVectors to GridFunctions.
-* Make `GFBraidApp` a `TimeIntegratorSubject`. Also replace scriptors by `ITimeIntegratorObserver`.
-* Consider an alternative for `Interpolate` calls which does not depend on components. 
+* Provide a functor class for converting BraidVectors to GridFunctions (cf. BraidVectorStruct.h for a draft).
+* Make `GFBraidApp` a `TimeIntegratorSubject`. Also replace scriptors by `ITimeIntegratorObserver`?
+* Can we use `DebugVectorWritingObject`?
+* For systems (Navier-Stokes, Biot, ...), we should consider an alternative to `Interpolate` calls which does not depend on components. 
+
  
