@@ -34,7 +34,7 @@ public:
     typedef SmartPtr<ug::UserData<double, TGridFunction::dim> > SPData;
     typedef RGFBraidApp<TDomain, TAlgebra> TBraidApp;
 
-    typedef SmartPtr<GFBraidApp<TDomain, TAlgebra> > SPBraidApp;
+    typedef SmartPtr<UG4BraidApp<TDomain, TAlgebra> > SPBraidApp;
 
     typedef SmartPtr<ug::DomainDiscretization<TDomain, TAlgebra> > SPDomainDisc;
 

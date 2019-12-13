@@ -17,17 +17,17 @@
 #include "../../plugins/Limex/time_disc/time_integrator.hpp"
 #include "lib_disc/dof_manager/function_pattern.h"
 
-#include "GFBraidApp.h"
+#include "UG4BraidApp.h"
 
 template<typename TDomain, typename TAlgebra>
-class RGFBraidApp : public GFBraidApp<TDomain, TAlgebra> {
+class RGFBraidApp : public UG4BraidApp<TDomain, TAlgebra> {
 
 public:
 
     /****************************************************************************
     * Typedefs
     ***************************************************************************/
-    typedef GFBraidApp<TDomain, TAlgebra> base_type;
+    typedef UG4BraidApp<TDomain, TAlgebra> base_type;
 
 	typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
 
@@ -97,7 +97,7 @@ public:
     /****************************************************************************
     * Constructor / Destructur
     ***************************************************************************/
-    RGFBraidApp() : GFBraidApp<TDomain, TAlgebra>() {
+    RGFBraidApp() : UG4BraidApp<TDomain, TAlgebra>() {
         this->name = "uniform";
     }
 

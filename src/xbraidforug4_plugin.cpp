@@ -105,22 +105,22 @@ namespace ug{
 
 
 
-                typedef GFBraidApp<TDomain, TAlgebra> TGFBraidApp;
-                string name_gf = string("GFBraidApp").append(suffix);
-                reg.add_class_<TGFBraidApp>(name_gf,grp)
-                        .add_method("setVerbose", &TGFBraidApp::setVerbose, "None","verbose","set the level of verbose (true / false)")
-                        .add_method("setStartTime", &TGFBraidApp::setStartTime, "None", "initial time", "set t0 as initial time")
-                        .add_method("setEndTime", &TGFBraidApp::setEndTime, "None", "end time", "set tN as endtime")
-                        .add_method("setNumberOfTimesteps", &TGFBraidApp::setNumberOfTimesteps, "", "number of timesteps", "set N as number of timesteps")
-                        .add_method("setTimeValues", static_cast<void (TGFBraidApp::*)(double,double,int)>(&TGFBraidApp::setTimeValues), "None", "t0#tN#N", "sets tstart, tstop, number of timesteps")
-                        .add_method("setDomainDisc", &TGFBraidApp::setDomainDisc, "None", "domain discretization", "set the domain")
-                        .add_method("setStartVector", &TGFBraidApp::setStartVector, "None", "Gridfunction u0", "set the vector for t=t0")
-                        .add_method("setMaxLevels", &TGFBraidApp::setMaxLevels, "None", "number", "set maximum number of level")
-                        .add_method("setGeneratorComponent", &TGFBraidApp::setGeneratorComponent, "None", "function component", "set the function component for interpolation")
-                        .add_method("setVectorGenerator", static_cast<void (TGFBraidApp::*)(const char*)>(&TGFBraidApp::setVectorGenerator), "None", "LuaFunction name", "set vector for time t != t0 as guess to speed up iterations")
-                        .add_method("setVectorGenerator", static_cast<void (TGFBraidApp::*)(SPData)>(&TGFBraidApp::setVectorGenerator), "None", "UserData", "set vector for time t != t0 as guess to speed up iterations")
-                        .add_method("setVectorGenerator", static_cast<void (TGFBraidApp::*)(ug::LuaFunctionHandle)>(&TGFBraidApp::setVectorGenerator), "None", "LuaFunctionHandle", "set vector for time t != t0 as guess to speed up iterations");
-                reg.add_class_to_group(name_gf,"GFBraidApp",tag);
+                typedef UG4BraidApp<TDomain, TAlgebra> TBraidApp;
+                string name_gf = string("UG4BraidApp").append(suffix);
+                reg.add_class_<TBraidApp>(name_gf,grp)
+                        .add_method("setVerbose", &TBraidApp::setVerbose, "None","verbose","set the level of verbose (true / false)")
+                        .add_method("setStartTime", &TBraidApp::setStartTime, "None", "initial time", "set t0 as initial time")
+                        .add_method("setEndTime", &TBraidApp::setEndTime, "None", "end time", "set tN as endtime")
+                        .add_method("setNumberOfTimesteps", &TBraidApp::setNumberOfTimesteps, "", "number of timesteps", "set N as number of timesteps")
+                        .add_method("setTimeValues", static_cast<void (TBraidApp::*)(double,double,int)>(&TBraidApp::setTimeValues), "None", "t0#tN#N", "sets tstart, tstop, number of timesteps")
+                        .add_method("setDomainDisc", &TBraidApp::setDomainDisc, "None", "domain discretization", "set the domain")
+                        .add_method("setStartVector", &TBraidApp::setStartVector, "None", "Gridfunction u0", "set the vector for t=t0")
+                        .add_method("setMaxLevels", &TBraidApp::setMaxLevels, "None", "number", "set maximum number of level")
+                        .add_method("setGeneratorComponent", &TBraidApp::setGeneratorComponent, "None", "function component", "set the function component for interpolation")
+                        .add_method("setVectorGenerator", static_cast<void (TBraidApp::*)(const char*)>(&TBraidApp::setVectorGenerator), "None", "LuaFunction name", "set vector for time t != t0 as guess to speed up iterations")
+                        .add_method("setVectorGenerator", static_cast<void (TBraidApp::*)(SPData)>(&TBraidApp::setVectorGenerator), "None", "UserData", "set vector for time t != t0 as guess to speed up iterations")
+                        .add_method("setVectorGenerator", static_cast<void (TBraidApp::*)(ug::LuaFunctionHandle)>(&TBraidApp::setVectorGenerator), "None", "LuaFunctionHandle", "set vector for time t != t0 as guess to speed up iterations");
+                reg.add_class_to_group(name_gf,"UG4BraidApp",tag);
 
 
 
@@ -129,7 +129,7 @@ namespace ug{
 
                 // SingleStageUniform
                 string name_rgf = string("RGFBraidApp").append(suffix);
-                reg.add_class_<TRGFBraidApp,TGFBraidApp>(name_rgf, grp)
+                reg.add_class_<TRGFBraidApp,TBraidApp>(name_rgf, grp)
                         .add_constructor()
                         .add_method("setTightTol", &TRGFBraidApp::setTightTol, "None", "tight tol", "sets the tight tolerance for adaptive convergence check")
                         .add_method("setLooseTol", &TRGFBraidApp::setLooseTol, "None", "loose tol", "sets the loose tolerance for adaptive convergence check")
@@ -146,7 +146,7 @@ namespace ug{
                 // SingeStageLevelDependend
                 typedef MGFBraidApp<TDomain, TAlgebra> TMGFBraidApp;
                 string name_mgf = string("MGFBraidApp").append(suffix);
-                reg.add_class_<TMGFBraidApp,TGFBraidApp>(name_mgf, grp)
+                reg.add_class_<TMGFBraidApp,TBraidApp>(name_mgf, grp)
                         .add_constructor()
                         .add_method("setTimeDisc", &TMGFBraidApp::setTimeDisc, "None", "single stage time discretization", "sets a single stage time discretization")
                         .add_method("setLinearSolver", &TMGFBraidApp::setLinearSolver, "None", "linear solver", "sets the linear Solver")
@@ -161,7 +161,7 @@ namespace ug{
                 // MultiStageLevelDependend
                 typedef ITSGFBraidApp<TDomain, TAlgebra> TITSGFBraidApp;
                 string name_itsgf = string("ITSGFBraidApp").append(suffix);
-                reg.add_class_<TITSGFBraidApp,TGFBraidApp>(name_itsgf, grp)
+                reg.add_class_<TITSGFBraidApp,TBraidApp>(name_itsgf, grp)
                         .add_constructor()
                         .add_method("setTimeDisc", &TITSGFBraidApp::setTimeDisc, "None", "timediscretization#level", "sets an arbitrary time discretization for level l ")
                         .add_method("setLinearSolver", &TITSGFBraidApp::setLinearSolver, "None", "linear solver", "set a linear Solver for level l")
@@ -177,7 +177,7 @@ namespace ug{
 
 
                 typedef SmartPtr<XBraidForUG4::SpaceTimeCommunicator> SPXCommunicator;
-                typedef SmartPtr<GFBraidApp<TDomain, TAlgebra> > SPBraidApp;
+                typedef SmartPtr<UG4BraidApp<TDomain, TAlgebra> > SPBraidApp;
                 typedef PBraid<TDomain, TAlgebra> TBraid;
                 string name = string("Braid").append(suffix);
                 reg.add_class_<TBraid>(name, grp)

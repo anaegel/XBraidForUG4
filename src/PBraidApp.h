@@ -18,10 +18,10 @@
 #include "../../plugins/Limex/time_disc/time_integrator.hpp"
 
 // This plugin.
-#include "GFBraidApp.h"
+#include "UG4BraidApp.h"
 
 template<typename TDomain, typename TAlgebra>
-class PBraidApp : public GFBraidApp<TDomain, TAlgebra> {
+class PBraidApp : public UG4BraidApp<TDomain, TAlgebra> {
 
 public:
     typedef ug::GridFunction<TDomain, TAlgebra> TGridFunction;
@@ -88,7 +88,7 @@ public:
 public:
 
     PBraidApp(MPI_Comm mpi_temporal, double tstart, double tstop, int steps) :
-            GFBraidApp<TDomain, TAlgebra>(mpi_temporal, tstart, tstop, steps) {}
+            UG4BraidApp<TDomain, TAlgebra>(mpi_temporal, tstart, tstop, steps) {}
 
     ~PBraidApp() override = default;
 

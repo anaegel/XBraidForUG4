@@ -29,12 +29,12 @@
 
 
 template<typename TDomain, typename TAlgebra>
-class GFBraidApp : public BraidApp {
+class UG4BraidApp : public BraidApp {
 public:
     // -----------------------------------------------------------------------------------------------------------------
     // type definition to shorten identifier
     // -----------------------------------------------------------------------------------------------------------------
-	typedef GFBraidApp<TDomain, TAlgebra> this_type;
+	typedef UG4BraidApp<TDomain, TAlgebra> this_type;
 
 	typedef ug::GridFunction <TDomain, TAlgebra> TGridFunction;
     typedef typename TAlgebra::vector_type::value_type vector_value_type;
@@ -83,13 +83,13 @@ protected:
      * for the temporal communication has to be set.
      */
 public:
-    GFBraidApp() : BraidApp(MPI_COMM_NULL, 0.0, 10.0, 10) {}
+    UG4BraidApp() : BraidApp(MPI_COMM_NULL, 0.0, 10.0, 10) {}
 
-    GFBraidApp(MPI_Comm mpi_temporal, double tstart, double tstop, int steps)
+    UG4BraidApp(MPI_Comm mpi_temporal, double tstart, double tstop, int steps)
     : BraidApp(mpi_temporal, tstart, tstop, steps)
     {}
 
-    ~GFBraidApp() {} ;
+    ~UG4BraidApp() {} ;
 
 
     // -----------------------------------------------------------------------------------------------------------------

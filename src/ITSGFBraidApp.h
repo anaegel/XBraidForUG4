@@ -17,17 +17,17 @@
 #include "lib_algebra/operator/interface/linear_operator_inverse.h"
 #include "../../plugins/Limex/time_disc/time_integrator.hpp"
 
-#include "GFBraidApp.h"
+#include "UG4BraidApp.h"
 
 template<typename TDomain, typename TAlgebra>
-class ITSGFBraidApp : public GFBraidApp<TDomain, TAlgebra> {
+class ITSGFBraidApp : public UG4BraidApp<TDomain, TAlgebra> {
 
 public:
 
     /****************************************************************************
     * Typedefs
     ***************************************************************************/
-    typedef GFBraidApp<TDomain, TAlgebra> base_type;
+    typedef UG4BraidApp<TDomain, TAlgebra> base_type;
     typedef MGFBraidApp<TDomain, TAlgebra> this_type;
 
     typedef ug::GridFunction<TDomain, TAlgebra> TGridFunction;
@@ -111,7 +111,7 @@ public:
     /****************************************************************************
     * Constructor / Destructur
     ***************************************************************************/
-    ITSGFBraidApp() : GFBraidApp<TDomain, TAlgebra>()
+    ITSGFBraidApp() : UG4BraidApp<TDomain, TAlgebra>()
 	{
         this->name = "Level dependent Higher Order Time Discretization";
     }
