@@ -33,8 +33,11 @@ set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS_INIT} -fPIC")
 
 set(SOURCES
         src/xbraidforug4_plugin.cpp
+        
         src/tools/Telvanni.h
         src/tools/Talasma.h
+        src/tools/trace_tools_config.h
+        
         src/PBraid.h
         src/BraidVectorStruct.h
 
@@ -43,7 +46,7 @@ set(SOURCES
         src/UG4BraidApp.h
         src/RGFBraidApp.h
         src/MGFBraidApp.h
-
+		src/aux_user_data.h
 
 
         src/PBraidApp.h

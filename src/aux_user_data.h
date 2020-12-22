@@ -9,11 +9,11 @@
 #include "common/math/math_vector_matrix/math_vector.h"
 
 template<typename TDatatype, int dim>
-class SinSourceOneCube : public ug::StdGlobPosData<SinSourceOneCube<TDatatype, dim>, TDatatype, dim> {
+class SinSourceUnitCube : public ug::StdGlobPosData<SinSourceUnitCube<TDatatype, dim>, TDatatype, dim> {
 public:
-    SinSourceOneCube() = default;
+    SinSourceUnitCube() = default;
 
-    ~SinSourceOneCube() = default;
+    ~SinSourceUnitCube() = default;
 
     std::string config_string() const {
         return "-sin(pi*x)*sin(pi*y)*sin(pi*z)*(sin(t)-dim*alpha*pi*pi*cos(t))";
@@ -36,12 +36,12 @@ public:
 
 
 template<typename TDatatype, int dim>
-class SinAnalyticSolutionOneCube
-        : public ug::StdGlobPosData<SinAnalyticSolutionOneCube<TDatatype, dim>, TDatatype, dim> {
+class SinAnalyticSolutionUnitCube
+        : public ug::StdGlobPosData<SinAnalyticSolutionUnitCube<TDatatype, dim>, TDatatype, dim> {
 public:
-    SinAnalyticSolutionOneCube() = default;
+    SinAnalyticSolutionUnitCube() = default;
 
-    ~SinAnalyticSolutionOneCube() = default;
+    ~SinAnalyticSolutionUnitCube() = default;
 
     std::string config_string() const {
         return "sin(pi*x)*sin(pi*y)*sin(pi*z)*cos(t)";

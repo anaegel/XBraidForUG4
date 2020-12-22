@@ -3,6 +3,7 @@
 //
 
 
+#include "aux_user_data.h"
 #include "bridge/util.h"
 #include "bridge/util_domain_algebra_dependent.h"
 #include "SpaceTimeCommunicator.h"
@@ -10,7 +11,6 @@
 #include "tools/Talasma.h"
 #include "PBraid.h"
 
-#include "fieldgenerator.h"
 
 using namespace std;
 using namespace ug::bridge;
@@ -232,24 +232,24 @@ namespace ug{
                 string suffix = GetDimensionSuffix<dim>();
                 string tag = GetDimensionTag<dim>();
                 {
-                    typedef SinSourceOneCube<number, dim> T;
+                    typedef SinSourceUnitCube<number, dim> T;
                     typedef CplUserData<number, dim> TBase;
-                    string name = string("SinSourceOneCube").append(suffix);
+                    string name = string("SinSourceUnitCube").append(suffix);
                     reg.add_class_<T, TBase>(name, grp)
                             .add_constructor()
                             .add_method("setAlpha", &T::setAlpha, "", "")
                             .set_construct_as_smart_pointer(true);
-                    reg.add_class_to_group(name, "SinSourceOneCube", tag);
+                    reg.add_class_to_group(name, "SinSourceUnitCube", tag);
                 }
                 {
-                    typedef SinAnalyticSolutionOneCube<number, dim> T;
+                    typedef SinAnalyticSolutionUnitCube<number, dim> T;
                     typedef CplUserData<number, dim> TBase;
-                    string name = string("SinAnalyticSolutionOneCube").append(suffix);
+                    string name = string("SinAnalyticSolutionUnitCube").append(suffix);
                     reg.add_class_<T, TBase>(name, grp)
                             .add_constructor()
                             .add_method("setAlpha", &T::setAlpha, "", "")
                             .set_construct_as_smart_pointer(true);
-                    reg.add_class_to_group(name, "SinAnalyticSolutionOneCube", tag);
+                    reg.add_class_to_group(name, "SinAnalyticSolutionUnitCube", tag);
                 }
                 {
                     typedef SinSourcePiCube<number, dim> T;
