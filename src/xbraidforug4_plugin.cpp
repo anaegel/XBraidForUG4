@@ -7,7 +7,7 @@
 #include "bridge/util_domain_algebra_dependent.h"
 #include "SpaceTimeCommunicator.h"
 #include "Scriptor.h"
-#include "Talasma.h"
+#include "tools/Talasma.h"
 #include "PBraid.h"
 
 #include "fieldgenerator.h"

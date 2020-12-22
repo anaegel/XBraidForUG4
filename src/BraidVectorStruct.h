@@ -13,7 +13,7 @@
 #include "common/util/smart_pointer.h"  		// for SmartPtr<T>
 
 // Plugin lib.
-#include "trace_tools_config.h"					// for TRACE_*
+#include "tools/trace_tools_config.h"					// for TRACE_*
 
 /*
  * this structure represents the grid functions that are used within xbraid as vector types. It is possible to create

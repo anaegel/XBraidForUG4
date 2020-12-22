@@ -13,12 +13,13 @@
 
 
 // This lib.
-#include "trace_tools_config.h"
+
 #include "BraidVectorStruct.h"
 #include "SpaceTimeCommunicator.h"
 #include "Scriptor.h"
-#include "Talasma.h"
-#include "Telvanni.h"
+#include "tools/trace_tools_config.h"
+#include "tools/Talasma.h"
+#include "tools/Telvanni.h"
 // #include "MemoryObserver.h"
 
 #if TRACE_GRIDFUNCTION == 1
@@ -27,7 +28,7 @@
     #define MATLAB(u, i, t)
 #endif
 
-
+/**This is a 'BraidApp' that deals with UG4-type grid functions. */
 template<typename TDomain, typename TAlgebra>
 class UG4BraidApp : public BraidApp {
 public:
@@ -78,11 +79,11 @@ protected:
 #endif
     int m_levels = 15;
 
-    /**
-     * Note that this default constructor does not create a consistent object. The parameter t_comm (of type MPI_Comm)
-     * for the temporal communication has to be set.
-     */
+
 public:
+    /** Note that this default constructor does not create a consistent object!
+     *  The parameter t_comm (of type MPI_Comm) for the temporal communication must be set.
+     */
     UG4BraidApp() : BraidApp(MPI_COMM_NULL, 0.0, 10.0, 10) {}
 
     UG4BraidApp(MPI_Comm mpi_temporal, double tstart, double tstop, int steps)
