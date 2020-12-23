@@ -44,6 +44,7 @@ set(SOURCES
 
         src/ITSGFBraidApp.h
         src/UG4BraidApp.h
+        src/UG4BraidApp_impl.hh
         src/RGFBraidApp.h
         src/MGFBraidApp.h
 		src/aux_user_data.h

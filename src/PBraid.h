@@ -243,7 +243,7 @@ public:
                           0.1);
 
         this->m_app->release();
-
+        return 0;
     }
 
     int run(SPGridFunction u0,
