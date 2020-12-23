@@ -41,16 +41,20 @@ set(SOURCES
         src/PBraid.h
         src/BraidVectorStruct.h
 
-
-        src/ITSGFBraidApp.h
+      
         src/UG4BraidApp.h
         src/UG4BraidApp_impl.hh
+        
         src/RGFBraidApp.h
+        src/RGFBraidApp_impl.hh
+        
         src/MGFBraidApp.h
-		src/aux_user_data.h
-
-
+        src/ITSGFBraidApp.h
+	
         src/PBraidApp.h
+        src/PBraidApp_impl.hh
+        
+       	src/aux_user_data.h
         src/SpaceTimeCommunicator.h
         src/Scriptor.h
 

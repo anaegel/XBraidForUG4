@@ -14,14 +14,14 @@
 
 
 // This lib.
-
 #include "BraidVectorStruct.h"
 #include "SpaceTimeCommunicator.h"
 #include "Scriptor.h"
+
+// TraceTools
 #include "tools/trace_tools_config.h"
 #include "tools/Talasma.h"
 #include "tools/Telvanni.h"
-// #include "MemoryObserver.h"
 
 #if TRACE_GRIDFUNCTION == 1
     #define MATLAB(u,i,t) this->matlab->write(u,i,t)
@@ -85,7 +85,9 @@ public:
     /** Note that this default constructor does not create a consistent object!
      *  The parameter t_comm (of type MPI_Comm) for the temporal communication must be set.
      */
-    UG4BraidApp() : BraidApp(MPI_COMM_NULL, 0.0, 10.0, 10) {}
+    UG4BraidApp()
+	: BraidApp(MPI_COMM_NULL, 0.0, 10.0, 10)
+	{}
 
     UG4BraidApp(MPI_Comm mpi_temporal, double tstart, double tstop, int steps)
     : BraidApp(mpi_temporal, tstart, tstop, steps)
