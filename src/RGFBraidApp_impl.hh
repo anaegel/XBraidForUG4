@@ -105,12 +105,15 @@ braid_Int RGFBraidApp<TDomain,TAlgebra>::Step(braid_Vector u, //
         }
 
         //this->debugwriter << "preparation" << std::endl;
+        // TGridFunction& ref = TBraidVectorFunctors().as_grid_function(*u);
         auto *sp_u_approx_tstart = (SPGridFunction *) u->value;
         auto *constsp_u_approx_tstop = (SPGridFunction *) ustop->value;
         SPGridFunction sp_u_tstop_approx = constsp_u_approx_tstop->get()->clone();
         SPGridFunction lp = constsp_u_approx_tstop->get()->clone();
 
         SPGridFunction sp_rhs = this->m_u0->clone_without_values(); // for rhs
+        TGridFunction &rhs_ = *sp_rhs;
+
         const ug::GridLevel gridlevel = sp_u_approx_tstart->get()->grid_level();
 
 
@@ -118,33 +121,39 @@ braid_Int RGFBraidApp<TDomain,TAlgebra>::Step(braid_Vector u, //
         m_timeDisc->prepare_step(series, current_dt);
         //this->debugwriter << "assemblation" << std::endl;
         if (fabs(current_dt - this->m_assembled_dt) > 1e-14) {
+        	// Assemble J,b
             StartRedoranLevel(LevelObserver::T_ASSEMBLE_OP,l);
             if(this->m_verbose){
                 this->debugwriter << "% Assemble operator " << current_dt<< std::endl;
             }
-            m_timeDisc->assemble_linear(*m_A, *sp_rhs.get(), gridlevel);
+            m_timeDisc->assemble_linear(*m_A, rhs_, gridlevel);
             m_linSolver->init(m_A, *lp.get());
             this->m_assembled_dt = current_dt;
             StopRedoranLevel(LevelObserver::T_ASSEMBLE_OP,l);
         } else {
+        	// Assemble b only
             StartRedoranLevel(LevelObserver::T_ASSEMBLE_RHS,l);
-            m_timeDisc->assemble_rhs(*sp_rhs.get(), gridlevel);
+            m_timeDisc->assemble_rhs(rhs_, gridlevel);
             StopRedoranLevel(LevelObserver::T_ASSEMBLE_RHS,l);
         }
 
-
-        //this->debugwriter << "fstop" << std::endl;
+        // OPTIONAL: Add term to b = b + b'
         if (fstop != nullptr) {
-            auto *sp_fstop = (SPGridFunction *) fstop->value;
+
+            // auto *sp_fstop = (SPGridFunction *) fstop->value;
+        	// usingTBraidVectorFunctors;
+            TGridFunction& fstop_ =  typename base_type::TBraidVectorFunctors().as_grid_function(*fstop);
             //VecAdd(a,x,b,y) <=> x = a * x + b * y
-            VecAdd(1, *sp_rhs.get(), 1, *sp_fstop->get());
+            VecAdd(1.0, rhs_, 1.0, fstop_);
         }
 #if TRACE_INDEX == 1
         MATLAB(sp_rhs->clone().get(), u->index, t_stop);
 #endif
+
+        // Solve Jx=b
         //this->debugwriter << "solve" << std::endl;
         StartRedoranLevel(LevelObserver::T_SOLVE,l);
-        bool success = m_linSolver->apply(*sp_u_tstop_approx.get(), *sp_rhs.get());
+        bool success = m_linSolver->apply(*sp_u_tstop_approx.get(), rhs_);
         StopRedoranLevel(LevelObserver::T_SOLVE,l);
 
 #if TRACE_DEFECT == 1
@@ -163,6 +172,8 @@ braid_Int RGFBraidApp<TDomain,TAlgebra>::Step(braid_Vector u, //
 #if TRACE_INDEX == 1
         MATLAB(sp_u_tstop_approx.get(), u->index, t_stop);
 #endif
+
+        // RETURN value
         *sp_u_approx_tstart = sp_u_tstop_approx;
         series->clear();
         //this->debugwriter << "end" << std::endl;

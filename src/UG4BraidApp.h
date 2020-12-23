@@ -12,6 +12,8 @@
 #include <string>
 #include <sstream>
 
+// UG4 lib.
+#include "../../plugins/Limex/time_disc/time_integrator.hpp"  // TimeIntegratorSubject
 
 // This lib.
 #include "BraidVectorStruct.h"
@@ -31,7 +33,8 @@
 
 /**This is a 'BraidApp' that deals with UG4-type grid functions. */
 template<typename TDomain, typename TAlgebra>
-class UG4BraidApp : public BraidApp {
+class UG4BraidApp : public BraidApp //, TimeIntegratorSubject<TDomain,TAlgebra>
+{
 public:
     // -----------------------------------------------------------------------------------------------------------------
     // type definition to shorten identifier
@@ -86,14 +89,15 @@ public:
      *  The parameter t_comm (of type MPI_Comm) for the temporal communication must be set.
      */
     UG4BraidApp()
-	: BraidApp(MPI_COMM_NULL, 0.0, 10.0, 10)
+	: BraidApp(MPI_COMM_NULL, 0.0, 10.0, 10) //, TimeIntegratorSubject<TAlgebra, TDomain>()
 	{}
 
     UG4BraidApp(MPI_Comm mpi_temporal, double tstart, double tstop, int steps)
-    : BraidApp(mpi_temporal, tstart, tstop, steps)
+    : BraidApp(mpi_temporal, tstart, tstop, steps)// , TimeIntegratorSubject<TAlgebra, TDomain>()
     {}
 
-    ~UG4BraidApp() {} ;
+    ~UG4BraidApp()
+    {};
 
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -162,6 +166,7 @@ public:
         this->m_levels = levelcount;
     }
 
+    //! Abstract base
     virtual void init() = 0;
 
     void release() {

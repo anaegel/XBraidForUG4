@@ -151,8 +151,8 @@ template<typename TDomain, typename TAlgebra>
       double timestamp;
       astatus.GetT(&timestamp);
 
-      auto *ref = (SPGridFunction *) u->value;
-
+     //  auto *ref = (SPGridFunction *) u->value;
+      TGridFunction& ref = TBraidVectorFunctors().as_grid_function(*u);
 
       int iter;
       int lvl;
@@ -164,12 +164,12 @@ template<typename TDomain, typename TAlgebra>
 #if TRACE_ACCESS == 1
 
       if(done == 1){
-          v = this->m_out->write(ref->get(), index, timestamp);
+          v = this->m_out->write(&ref, index, timestamp);
       } else {
-          v = this->m_out->write(ref->get(), index, timestamp, iter, lvl);
+          v = this->m_out->write(&ref, index, timestamp, iter, lvl);
       }
 #else
-      v = this->m_out->write(ref->get(), index, timestamp);
+      v = this->m_out->write(&ref, index, timestamp);
 #endif
       StopRedoran(Observer::T_ACCESS);
       return v;

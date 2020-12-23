@@ -20,7 +20,8 @@
 #include "UG4BraidApp.h"
 
 template<typename TDomain, typename TAlgebra>
-class RGFBraidApp : public UG4BraidApp<TDomain, TAlgebra> {
+class RGFBraidApp : public UG4BraidApp<TDomain, TAlgebra>
+{
 
 public:
 
@@ -308,10 +309,11 @@ public:
     braid_Int Residual(braid_Vector u, braid_Vector r,
                        BraidStepStatus &pstatus) override;
 
- 	braid_Int SpatialNorm(braid_Vector u, braid_Real *norm_ptr) override {
+ 	braid_Int SpatialNorm(braid_Vector u, braid_Real *norm_ptr) override
+ 	{
         auto *uref = (SPGridFunction *) u->value;
         // todo clone for non residual
-	SPGridFunction tempobject = uref->get()->clone();
+        SPGridFunction tempobject = uref->get()->clone();
         *norm_ptr = tempobject->norm();
 #if TRACE_INDEX == 1
         if (this->m_verbose) {
@@ -321,8 +323,8 @@ public:
         return 0;
     };
 
-    braid_Int Coarsen(braid_Vector fu, braid_Vector *cu, BraidCoarsenRefStatus &status)
-    override {
+    braid_Int Coarsen(braid_Vector fu, braid_Vector *cu, BraidCoarsenRefStatus &status) override
+    {
      /*	Clone(fu, cu);
 
         auto *sp_fu = (SPGridFunction *) fu->value;
@@ -339,8 +341,8 @@ public:
     }
 
 
-    braid_Int Refine(braid_Vector cu, braid_Vector *fu, BraidCoarsenRefStatus &status)
-    override {
+    braid_Int Refine(braid_Vector cu, braid_Vector *fu, BraidCoarsenRefStatus &status) override
+    {
     	/*Clone(cu, fu);
 
         auto *sp_fu = (SPGridFunction *) (*fu)->value;
