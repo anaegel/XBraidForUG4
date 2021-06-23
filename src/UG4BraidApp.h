@@ -99,6 +99,8 @@ public:
     ~UG4BraidApp()
     {};
 
+    void set_name(std::string idstring)
+    { this->name = idstring; }
 
     // -----------------------------------------------------------------------------------------------------------------
     // Values for time setting

@@ -109,7 +109,9 @@ braid_Int RGFBraidApp<TDomain,TAlgebra>::Step(braid_Vector u, //
         auto *sp_u_approx_tstart = (SPGridFunction *) u->value;
         auto *constsp_u_approx_tstop = (SPGridFunction *) ustop->value;
         SPGridFunction sp_u_tstop_approx = constsp_u_approx_tstop->get()->clone();
-        SPGridFunction lp = constsp_u_approx_tstop->get()->clone();
+
+        SPGridFunction aux = constsp_u_approx_tstop->get()->clone();
+       //  TGridFunction &aux_ = *aux;
 
         SPGridFunction sp_rhs = this->m_u0->clone_without_values(); // for rhs
         TGridFunction &rhs_ = *sp_rhs;
@@ -127,7 +129,7 @@ braid_Int RGFBraidApp<TDomain,TAlgebra>::Step(braid_Vector u, //
                 this->debugwriter << "% Assemble operator " << current_dt<< std::endl;
             }
             m_timeDisc->assemble_linear(*m_A, rhs_, gridlevel);
-            m_linSolver->init(m_A, *lp.get());
+            m_linSolver->init(m_A, *aux);
             this->m_assembled_dt = current_dt;
             StopRedoranLevel(LevelObserver::T_ASSEMBLE_OP,l);
         } else {

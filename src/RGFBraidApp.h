@@ -100,7 +100,7 @@ public:
     * Constructor / Destructur
     ***************************************************************************/
     RGFBraidApp() : UG4BraidApp<TDomain, TAlgebra>() {
-        this->name = "uniform";
+        this->set_name("uniform");
     }
 
     ~RGFBraidApp() = default;
@@ -171,9 +171,10 @@ public:
     }
     double loose_tol = 1e-2;
 
-    void setLooseTol(double pLooseTol){
-        this->loose_tol = pLooseTol;
-    }
+    void setLooseTol(double pLooseTol)
+    {  this->loose_tol = pLooseTol; }
+
+
     int lastiter[15] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
 
@@ -311,10 +312,9 @@ public:
 
  	braid_Int SpatialNorm(braid_Vector u, braid_Real *norm_ptr) override
  	{
-        auto *uref = (SPGridFunction *) u->value;
-        // todo clone for non residual
-        SPGridFunction tempobject = uref->get()->clone();
-        *norm_ptr = tempobject->norm();
+ 		const TGridFunction& uvec = typename base_type::TBraidVectorFunctors().as_grid_function(*u);
+        *norm_ptr = uvec.norm();
+
 #if TRACE_INDEX == 1
         if (this->m_verbose) {
             this->debugwriter << "norm( u_" << u->index << ") % " << *norm_ptr << std::endl;
